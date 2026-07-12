@@ -14,15 +14,15 @@
   // -------- Supabase config (same project as the rest of the dashboard) --------
   // For your audience's standalone, replace these with placeholders
   // and have them paste their own values, just like the other pages.
-  const TOPBAR_SUPABASE_URL = 'PASTE-YOUR-SUPABASE-PROJECT-URL-HERE';
-  const TOPBAR_SUPABASE_KEY = 'PASTE-YOUR-SUPABASE-PUBLISHABLE-KEY-HERE';
+  const TOPBAR_SUPABASE_URL = 'https://htazemqyxrjvwkhpggdj.supabase.co';
+  const TOPBAR_SUPABASE_KEY = 'sb_publishable_d9JQrKQutJKSN_dDSYNeBg_-WB1V6c1';
 
   // -------- CSS --------
   const css = `
 .topbar {
   position: sticky; top: 0; z-index: 40;
   display: flex; gap: 6px;
-  padding: max(10px, env(safe-area-inset-top)) 14px 10px;
+  padding: max(12px, env(safe-area-inset-top)) max(14px, env(safe-area-inset-right)) 10px max(14px, env(safe-area-inset-left));
   /* Fully opaque so each page's body background can't bleed through
      and tint the bar a different color. Matches the dashboard's base
      dark background so the bar feels continuous with the page chrome. */
@@ -110,7 +110,7 @@
 }
 
 @media (max-width: 480px) {
-  .topbar { padding-left: 10px; padding-right: 10px; gap: 4px; }
+  .topbar { padding-left: max(10px, env(safe-area-inset-left)); padding-right: max(10px, env(safe-area-inset-right)); gap: 4px; }
   .topbar-pill, .topbar-water-pill { padding: 7px 9px; gap: 5px; }
   .topbar-pill-label { font-size: 9px; letter-spacing: 0.10em; }
   .topbar-pill-count { font-size: 11px; }
