@@ -163,10 +163,14 @@ body::after {
   background: rgba(255,255,255,0.04);
 }
 @media (max-width: 480px) {
-  .goal-ticker { padding: 9px 12px; }
-  .goal-ticker-label { font-size: 9px; letter-spacing: 0.14em; }
-  .goal-ticker-row { font-size: 12px; }
-  .goal-ticker-meta { font-size: 10px; padding: 2px 7px; }
+  .ticker-row { margin-bottom: 14px; }
+  .goal-ticker { gap: 6px; padding: 5px 8px; border-radius: 10px; }
+  .goal-ticker-led-dot { width: 5px; height: 5px; }
+  .goal-ticker-label { font-size: 7.5px; letter-spacing: 0.10em; }
+  .goal-ticker-stage { height: 18px; }
+  .goal-ticker-row { gap: 5px; font-size: 10px; }
+  .goal-ticker-status { width: 12px; }
+  .goal-ticker-meta { font-size: 9px; padding: 1px 5px; }
 }
 
 /* ===== Component 3: Day Ring ===== */
@@ -236,6 +240,144 @@ body::after {
   .day-ring { width: 144px; height: 144px; }
   .day-ring-percent { font-size: 32px; }
   .day-ring-status { font-size: 13px; }
+}
+
+/* ===== Component 4: Habit Tracker ===== */
+.habit-card {
+  padding: 16px;
+}
+.habit-market {
+  position: relative; overflow: hidden;
+  display: flex; align-items: center; gap: 10px;
+  min-height: 38px;
+  margin-bottom: 14px;
+  padding: 8px 12px;
+  border-radius: 12px;
+  background:
+    linear-gradient(180deg, rgba(0,0,0,0.42), rgba(0,0,0,0.24)),
+    repeating-linear-gradient(0deg, rgba(255,255,255,0.025) 0, rgba(255,255,255,0.025) 1px, transparent 1px, transparent 3px);
+  border: 1px solid rgba(255,255,255,0.06);
+}
+.habit-market-label {
+  font-family: var(--font-mono);
+  font-size: 9px; font-weight: 800;
+  letter-spacing: 0.18em;
+  color: var(--text-tertiary);
+}
+.habit-market-stage {
+  position: relative; flex: 1; height: 18px; overflow: hidden;
+}
+.habit-market-row {
+  position: absolute; inset: 0;
+  display: flex; align-items: center; gap: 8px;
+  font-family: var(--font-mono);
+  font-size: 12px; font-weight: 700;
+  color: var(--text-primary);
+  white-space: nowrap;
+  opacity: 1;
+  transform: translateY(0);
+  transition: opacity 0.22s ease, transform 0.22s ease;
+}
+.habit-market-row.is-rotating { opacity: 0; transform: translateY(-6px); }
+.habit-market-symbol { color: var(--success); font-size: 10px; letter-spacing: 0.10em; }
+.habit-market-text { overflow: hidden; text-overflow: ellipsis; }
+.habit-summary {
+  display: grid; grid-template-columns: repeat(2, 1fr); gap: 8px;
+  margin-bottom: 14px;
+}
+.habit-stat {
+  padding: 12px;
+  border-radius: 12px;
+  background: rgba(255,255,255,0.035);
+  border: 1px solid rgba(255,255,255,0.055);
+}
+.habit-stat-label {
+  font-family: var(--font-mono);
+  font-size: 9px; font-weight: 700;
+  letter-spacing: 0.12em;
+  color: var(--text-tertiary);
+  text-transform: uppercase;
+}
+.habit-stat-value {
+  margin-top: 6px;
+  font-family: var(--font-mono);
+  font-size: 22px; font-weight: 800;
+  color: var(--text-primary);
+}
+.habit-list {
+  display: grid; gap: 8px;
+  margin-bottom: 16px;
+}
+.habit-row {
+  display: flex; align-items: center; gap: 12px;
+  width: 100%;
+  padding: 11px 12px;
+  border: 1px solid rgba(255,255,255,0.06);
+  border-radius: 12px;
+  background: rgba(255,255,255,0.035);
+  color: inherit;
+  font: inherit;
+  text-align: left;
+  cursor: pointer;
+}
+.habit-row.is-done {
+  border-color: rgba(107,227,164,0.24);
+  background: rgba(107,227,164,0.08);
+}
+.habit-check {
+  width: 28px; height: 28px;
+  display: inline-flex; align-items: center; justify-content: center;
+  border-radius: 9px;
+  border: 1px solid rgba(255,255,255,0.12);
+  color: transparent;
+  font-weight: 900;
+  flex-shrink: 0;
+}
+.habit-row.is-done .habit-check {
+  background: var(--success);
+  border-color: var(--success);
+  color: #07110C;
+}
+.habit-main { flex: 1; min-width: 0; }
+.habit-name {
+  color: var(--text-primary);
+  font-size: 14px; font-weight: 700;
+}
+.habit-meta {
+  margin-top: 2px;
+  color: var(--text-tertiary);
+  font-size: 11px;
+}
+.habit-grid-wrap {
+  overflow-x: auto;
+  padding: 2px 0 4px;
+}
+.habit-grid {
+  display: grid;
+  grid-auto-flow: column;
+  grid-template-rows: repeat(7, 10px);
+  grid-auto-columns: 10px;
+  gap: 3px;
+  width: max-content;
+  min-width: 100%;
+}
+.habit-cell {
+  width: 10px; height: 10px;
+  border-radius: 2px;
+  background: rgba(255,255,255,0.055);
+  border: 1px solid rgba(255,255,255,0.035);
+}
+.habit-cell.l1 { background: rgba(107,227,164,0.22); }
+.habit-cell.l2 { background: rgba(107,227,164,0.42); }
+.habit-cell.l3 { background: rgba(107,227,164,0.66); }
+.habit-cell.l4 { background: #6BE3A4; box-shadow: 0 0 6px rgba(107,227,164,0.35); }
+@media (max-width: 480px) {
+  .habit-card { padding: 14px; }
+  .habit-market { gap: 7px; min-height: 34px; padding: 7px 9px; }
+  .habit-market-label { font-size: 7.5px; letter-spacing: 0.10em; }
+  .habit-market-row { font-size: 10px; gap: 6px; }
+  .habit-stat-value { font-size: 19px; }
+  .habit-row { padding: 10px; }
 }
 
 /* ===== Component 4: section + To Do List ===== */
@@ -640,6 +782,35 @@ body::after {
   </div>
 
   <div class="section">
+    <div class="section-title">Habit Tracker</div>
+    <div class="gm-card habit-card">
+      <div class="habit-market" aria-live="polite" aria-atomic="true">
+        <div class="habit-market-label">HABITS</div>
+        <div class="habit-market-stage" id="habitMarketStage">
+          <div class="habit-market-row">
+            <span class="habit-market-symbol">RUN</span>
+            <span class="habit-market-text">Loading habits...</span>
+          </div>
+        </div>
+      </div>
+      <div class="habit-summary">
+        <div class="habit-stat">
+          <div class="habit-stat-label">Today</div>
+          <div class="habit-stat-value" id="habitTodayStat">0/0</div>
+        </div>
+        <div class="habit-stat">
+          <div class="habit-stat-label">Best Streak</div>
+          <div class="habit-stat-value" id="habitBestStat">0d</div>
+        </div>
+      </div>
+      <div class="habit-list" id="habitList"></div>
+      <div class="habit-grid-wrap">
+        <div class="habit-grid" id="habitGrid" aria-label="Habit completion grid"></div>
+      </div>
+    </div>
+  </div>
+
+  <div class="section">
     <div class="section-title">To Do List</div>
 
     <!-- TODAY -->
@@ -757,6 +928,174 @@ body::after {
     return Array.isArray(g) ? g : [];
   }
   function setGoals(key, list) { storeSet(key, list); }
+
+  // ---------- habits ----------
+  const HABIT_KEY = 'habits:v1';
+  const DEFAULT_HABITS = [
+    { id: 'run', name: 'Run', createdAt: '2026-01-01T00:00:00.000Z' },
+    { id: 'gym', name: 'Gym', createdAt: '2026-01-01T00:00:00.000Z' }
+  ];
+  const habitStage = document.getElementById('habitMarketStage');
+  let habitCycleIdx = 0;
+  let habitTickerTimer = null;
+  let firstHabitTick = true;
+
+  function getHabitState() {
+    const raw = storeGet(HABIT_KEY);
+    const state = raw && typeof raw === 'object' ? raw : {};
+    const byId = {};
+    const existing = Array.isArray(state.habits) ? state.habits : [];
+    existing.forEach(h => { if (h && h.id) byId[h.id] = h; });
+    DEFAULT_HABITS.forEach(h => {
+      if (!byId[h.id]) byId[h.id] = Object.assign({}, h);
+    });
+    const ordered = DEFAULT_HABITS
+      .map(h => byId[h.id])
+      .concat(existing.filter(h => h && h.id && !DEFAULT_HABITS.some(d => d.id === h.id)));
+    return {
+      habits: ordered,
+      logs: state.logs && typeof state.logs === 'object' ? state.logs : {}
+    };
+  }
+  function setHabitState(state) {
+    storeSet(HABIT_KEY, state);
+    window.dispatchEvent(new CustomEvent('habits-changed'));
+  }
+  function isHabitDone(state, habitId, dateStr) {
+    return !!(state.logs[habitId] && state.logs[habitId][dateStr]);
+  }
+  function toggleHabit(habitId) {
+    const state = getHabitState();
+    const dateStr = getActiveDateString();
+    if (!state.logs[habitId]) state.logs[habitId] = {};
+    if (state.logs[habitId][dateStr]) delete state.logs[habitId][dateStr];
+    else state.logs[habitId][dateStr] = true;
+    setHabitState(state);
+    renderHabits();
+    tickHabitMarket();
+  }
+  function habitStreak(state, habitId) {
+    let streak = 0;
+    const d = new Date(getActiveDateString() + 'T12:00:00');
+    while (isHabitDone(state, habitId, dateToKey(d))) {
+      streak++;
+      d.setDate(d.getDate() - 1);
+    }
+    return streak;
+  }
+  function habitBestStreak(state, habitId) {
+    const dates = Object.keys(state.logs[habitId] || {}).sort();
+    let best = 0;
+    let current = 0;
+    let prev = null;
+    dates.forEach(dateStr => {
+      const date = new Date(dateStr + 'T12:00:00');
+      const diff = prev ? Math.round((date - prev) / 86400000) : 1;
+      current = diff === 1 ? current + 1 : 1;
+      best = Math.max(best, current);
+      prev = date;
+    });
+    return Math.max(best, habitStreak(state, habitId));
+  }
+  function habitRate(state, habitId) {
+    const today = new Date(getActiveDateString() + 'T12:00:00');
+    let done = 0;
+    for (let i = 0; i < 30; i++) {
+      const d = new Date(today);
+      d.setDate(today.getDate() - i);
+      if (isHabitDone(state, habitId, dateToKey(d))) done++;
+    }
+    return Math.round(done / 30 * 100);
+  }
+  function buildHabitMarketItems(state) {
+    if (!state.habits.length) return [{ symbol: 'HAB', text: 'No habits yet' }];
+    return state.habits.map(h => {
+      const streak = habitStreak(state, h.id);
+      const done = isHabitDone(state, h.id, getActiveDateString());
+      return {
+        symbol: h.name.slice(0, 3).toUpperCase(),
+        text: h.name + ' ' + (done ? 'closed green' : 'open') + ' · ' + streak + 'd streak'
+      };
+    });
+  }
+  function tickHabitMarket() {
+    if (!habitStage) return;
+    const state = getHabitState();
+    const items = buildHabitMarketItems(state);
+    if (habitCycleIdx >= items.length) habitCycleIdx = 0;
+    const item = items[habitCycleIdx];
+    habitCycleIdx = (habitCycleIdx + 1) % items.length;
+    let row = habitStage.querySelector('.habit-market-row');
+    if (!row) {
+      row = document.createElement('div');
+      row.className = 'habit-market-row';
+      row.innerHTML = '<span class="habit-market-symbol"></span><span class="habit-market-text"></span>';
+      habitStage.appendChild(row);
+    }
+    const apply = () => {
+      row.querySelector('.habit-market-symbol').textContent = item.symbol;
+      row.querySelector('.habit-market-text').textContent = item.text;
+      row.classList.remove('is-rotating');
+    };
+    if (firstHabitTick) { apply(); firstHabitTick = false; return; }
+    row.classList.add('is-rotating');
+    setTimeout(apply, 220);
+  }
+  function startHabitTicker() {
+    tickHabitMarket();
+    if (habitTickerTimer) clearInterval(habitTickerTimer);
+    habitTickerTimer = setInterval(tickHabitMarket, 5000);
+  }
+  function renderHabitGrid(state) {
+    const grid = document.getElementById('habitGrid');
+    if (!grid) return;
+    const today = new Date(getActiveDateString() + 'T12:00:00');
+    const start = new Date(today);
+    start.setDate(today.getDate() - 90);
+    const offset = start.getDay();
+    start.setDate(start.getDate() - offset);
+    grid.innerHTML = '';
+    for (let i = 0; i < 98; i++) {
+      const d = new Date(start);
+      d.setDate(start.getDate() + i);
+      const dateStr = dateToKey(d);
+      const future = d > today;
+      const done = future ? 0 : state.habits.filter(h => isHabitDone(state, h.id, dateStr)).length;
+      const ratio = state.habits.length ? done / state.habits.length : 0;
+      const level = ratio === 0 ? 0 : Math.max(1, Math.ceil(ratio * 4));
+      const cell = document.createElement('span');
+      cell.className = 'habit-cell' + (level ? ' l' + level : '');
+      cell.title = dateStr + ': ' + done + '/' + state.habits.length;
+      grid.appendChild(cell);
+    }
+  }
+  function renderHabits() {
+    const state = getHabitState();
+    const today = getActiveDateString();
+    const done = state.habits.filter(h => isHabitDone(state, h.id, today)).length;
+    document.getElementById('habitTodayStat').textContent = done + '/' + state.habits.length;
+    const best = state.habits.reduce((max, h) => Math.max(max, habitBestStreak(state, h.id)), 0);
+    document.getElementById('habitBestStat').textContent = best + 'd';
+    const list = document.getElementById('habitList');
+    list.innerHTML = '';
+    state.habits.forEach(h => {
+      const row = document.createElement('button');
+      row.type = 'button';
+      row.className = 'habit-row' + (isHabitDone(state, h.id, today) ? ' is-done' : '');
+      row.innerHTML =
+        '<span class="habit-check">✓</span>' +
+        '<span class="habit-main">' +
+          '<span class="habit-name"></span>' +
+          '<span class="habit-meta"></span>' +
+        '</span>';
+      row.querySelector('.habit-name').textContent = h.name;
+      row.querySelector('.habit-meta').textContent =
+        habitStreak(state, h.id) + ' day streak · ' + habitRate(state, h.id) + '% last 30d';
+      row.addEventListener('click', () => toggleHabit(h.id));
+      list.appendChild(row);
+    });
+    renderHabitGrid(state);
+  }
 
   // ---------- rollover: pull undone older goals into today ----------
   function rollover() {
@@ -1294,16 +1633,22 @@ body::after {
   // ---------- Boot ----------
   rollover();
   processStreak();
+  setHabitState(getHabitState());
   loadToday();
   loadTomorrow();
   renderStreak();
+  renderHabits();
   updateDayRing();
   setInterval(updateDayRing, 60 * 1000);
   startTicker();
+  startHabitTicker();
 
   // Re-render when storage changes from another tab (or our bridged parent).
   window.addEventListener('storage', () => {
-    loadToday(); loadTomorrow(); renderStreak();
+    loadToday(); loadTomorrow(); renderStreak(); renderHabits(); tickHabitMarket();
+  });
+  window.addEventListener('habits-changed', () => {
+    renderHabits(); tickHabitMarket();
   });
 })();
 </script>
@@ -1312,9 +1657,11 @@ document.addEventListener('DOMContentLoaded', function () {
   if (typeof initCloudSync !== 'function') return;
   initCloudSync({
     appKey: 'goals',
+    syncedKeys: ['habits:v1'],
     syncedPrefixes: ['goals:'],
     onApplied: function () {
       window.dispatchEvent(new CustomEvent('goals-changed'));
+      window.dispatchEvent(new CustomEvent('habits-changed'));
       window.dispatchEvent(new Event('storage'));
     }
   });
