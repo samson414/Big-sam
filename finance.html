@@ -371,10 +371,17 @@ html, body { scrollbar-width: none; -ms-overflow-style: none; }
 }
 
 /* ===== Net Worth ===== */
-.nw-list { font-size: 13px; }
+.nw-list {
+  display: grid;
+  grid-template-columns: repeat(2, minmax(0, 1fr));
+  gap: 6px;
+  font-size: 13px;
+}
 .nw-row {
   display: flex; justify-content: space-between; align-items: center;
-  padding: 5px 0; gap: 8px; min-width: 0;
+  padding: 7px 8px; gap: 8px; min-width: 0;
+  background: rgba(255,255,255,0.025);
+  border-radius: 9px;
 }
 .nw-name {
   color: var(--text-primary); flex: 1 1 auto; min-width: 0;
@@ -426,6 +433,9 @@ html, body { scrollbar-width: none; -ms-overflow-style: none; }
 }
 @media (max-width: 720px) {
   .section .card .card-grid { grid-template-columns: 1fr; }
+}
+@media (max-width: 480px) {
+  .nw-list { grid-template-columns: 1fr; }
 }
 
 /* Stock-style net-worth chart */
