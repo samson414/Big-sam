@@ -69,6 +69,48 @@ body::after {
   margin: 0 auto;
 }
 
+.quick-nav {
+  position: fixed;
+  right: max(12px, env(safe-area-inset-right));
+  top: 50%;
+  transform: translateY(-50%);
+  z-index: 35;
+  display: flex; flex-direction: column; gap: 6px;
+  padding: 6px;
+  border: 1px solid rgba(255,255,255,0.06);
+  border-radius: 14px;
+  background: rgba(5,5,6,0.72);
+  backdrop-filter: blur(18px);
+  -webkit-backdrop-filter: blur(18px);
+}
+.quick-nav a {
+  min-width: 78px;
+  padding: 8px 10px;
+  border-radius: 10px;
+  color: var(--text-tertiary);
+  text-decoration: none;
+  font-family: var(--font-mono);
+  font-size: 9px; font-weight: 800;
+  letter-spacing: 0.10em;
+  text-transform: uppercase;
+  background: rgba(255,255,255,0.025);
+}
+.quick-nav a:hover {
+  color: var(--text-primary);
+  background: rgba(255,255,255,0.07);
+}
+@media (max-width: 860px) {
+  .quick-nav {
+    position: sticky;
+    top: calc(54px + env(safe-area-inset-top));
+    transform: none;
+    flex-direction: row;
+    overflow-x: auto;
+    margin: 0 0 14px;
+  }
+  .quick-nav a { min-width: max-content; }
+}
+
 /* ===== Component 1: page title ===== */
 .dash-title {
   margin: 0 0 14px;
@@ -84,6 +126,108 @@ body::after {
   color: transparent;
 }
 @media (max-width: 480px) { .dash-title { font-size: 31px; } }
+
+/* ===== Dashboard Overview ===== */
+.dash-overview {
+  display: grid;
+  grid-template-columns: minmax(0, 1.25fr) minmax(280px, 0.75fr);
+  gap: 14px;
+  margin-bottom: 18px;
+}
+.dash-panel {
+  position: relative;
+  overflow: hidden;
+  border-radius: 16px;
+  border: 1px solid rgba(107,227,164,0.10);
+  background:
+    radial-gradient(circle at 68% 22%, rgba(107,227,164,0.16), transparent 34%),
+    linear-gradient(180deg, rgba(255,255,255,0.045), rgba(255,255,255,0.025));
+  box-shadow: 0 16px 50px rgba(0,0,0,0.42);
+  padding: 18px;
+}
+.dash-panel-title {
+  font-family: var(--font-display);
+  font-style: italic;
+  font-size: 26px;
+  line-height: 1;
+  color: var(--text-primary);
+  margin-bottom: 6px;
+}
+.dash-panel-sub {
+  color: var(--text-tertiary);
+  font-size: 12px;
+}
+.dash-metric-grid {
+  display: grid;
+  grid-template-columns: repeat(4, minmax(0, 1fr));
+  gap: 8px;
+  margin-top: 18px;
+}
+.dash-metric {
+  min-height: 88px;
+  border-radius: 12px;
+  border: 1px solid rgba(255,255,255,0.055);
+  background: rgba(0,0,0,0.20);
+  padding: 12px;
+}
+.dash-metric-label {
+  font-family: var(--font-mono);
+  font-size: 9px; font-weight: 800;
+  letter-spacing: 0.12em;
+  text-transform: uppercase;
+  color: var(--text-tertiary);
+}
+.dash-metric-value {
+  margin-top: 8px;
+  font-family: var(--font-mono);
+  font-size: 24px; font-weight: 900;
+  color: var(--text-primary);
+}
+.dash-metric-note {
+  margin-top: 4px;
+  font-size: 11px;
+  color: var(--text-tertiary);
+}
+.dash-chart-card {
+  display: flex; flex-direction: column;
+  min-height: 100%;
+}
+.dash-chart-head {
+  display: flex; align-items: center; justify-content: space-between; gap: 10px;
+  margin-bottom: 10px;
+}
+.dash-chart-title {
+  font-family: var(--font-mono);
+  font-size: 10px; font-weight: 800;
+  letter-spacing: 0.14em;
+  text-transform: uppercase;
+  color: var(--text-tertiary);
+}
+.dash-chart-value {
+  font-family: var(--font-mono);
+  font-size: 12px; font-weight: 800;
+  color: #9BDBFF;
+}
+.dash-chart {
+  width: 100%;
+  height: 150px;
+  display: block;
+  border-radius: 12px;
+  background:
+    linear-gradient(rgba(125,211,252,0.06) 1px, transparent 1px),
+    linear-gradient(90deg, rgba(125,211,252,0.04) 1px, transparent 1px),
+    rgba(0,0,0,0.16);
+  background-size: 100% 25%, 12.5% 100%, auto;
+}
+@media (max-width: 820px) {
+  .dash-overview { grid-template-columns: 1fr; }
+  .dash-metric-grid { grid-template-columns: repeat(2, minmax(0, 1fr)); }
+}
+@media (max-width: 480px) {
+  .dash-panel { padding: 15px; }
+  .dash-panel-title { font-size: 23px; }
+  .dash-chart { height: 122px; }
+}
 
 /* ===== Component 2: Goal Ticker ===== */
 .ticker-row {
@@ -838,6 +982,19 @@ body::after {
   body { padding: max(20px, env(safe-area-inset-top)) max(14px, env(safe-area-inset-right)) calc(50px + env(safe-area-inset-bottom)) max(14px, env(safe-area-inset-left)); }
   .gm-card { padding: 16px; }
   .gm-progress-num { font-size: 36px; }
+  .habit-add-wrap {
+    display: grid;
+    grid-template-columns: 1fr;
+    align-items: stretch;
+  }
+  .habit-add-wrap .gm-input {
+    width: 100%;
+    min-width: 100%;
+    font-size: 16px;
+  }
+  .habit-add-wrap .gm-add {
+    width: 100%;
+  }
 }
 </style>
 </head>
@@ -845,6 +1002,51 @@ body::after {
 <div class="page">
 
   <h1 class="dash-title">Better Sam</h1>
+
+  <nav class="quick-nav" aria-label="Dashboard sections">
+    <a href="#dashboard">Dash</a>
+    <a href="#habits">Habits</a>
+    <a href="#record">Record</a>
+    <a href="#todo">To-do</a>
+    <a href="gym.html">Gym</a>
+    <a href="finance.html">Finance</a>
+  </nav>
+
+  <section class="dash-overview" id="dashboard">
+    <div class="dash-panel">
+      <div class="dash-panel-title">Good morning, Sam</div>
+      <div class="dash-panel-sub" id="dashDateLabel">Loading today...</div>
+      <div class="dash-metric-grid">
+        <div class="dash-metric">
+          <div class="dash-metric-label">Goals</div>
+          <div class="dash-metric-value" id="dashGoalsValue">0/0</div>
+          <div class="dash-metric-note" id="dashGoalsNote">No goals yet</div>
+        </div>
+        <div class="dash-metric">
+          <div class="dash-metric-label">Habits</div>
+          <div class="dash-metric-value" id="dashHabitsValue">0/0</div>
+          <div class="dash-metric-note" id="dashHabitsNote">Run / Gym ready</div>
+        </div>
+        <div class="dash-metric">
+          <div class="dash-metric-label">Streak</div>
+          <div class="dash-metric-value" id="dashStreakValue">0d</div>
+          <div class="dash-metric-note">Goals streak</div>
+        </div>
+        <div class="dash-metric">
+          <div class="dash-metric-label">Day</div>
+          <div class="dash-metric-value" id="dashDayValue">0%</div>
+          <div class="dash-metric-note" id="dashDayNote">Awake progress</div>
+        </div>
+      </div>
+    </div>
+    <div class="dash-panel dash-chart-card">
+      <div class="dash-chart-head">
+        <div class="dash-chart-title">Habit Momentum</div>
+        <div class="dash-chart-value" id="dashChartValue">7 days</div>
+      </div>
+      <svg class="dash-chart" id="dashHabitChart" viewBox="0 0 320 150" role="img" aria-label="Habit completion chart"></svg>
+    </div>
+  </section>
 
   <div class="ticker-row">
     <div class="goal-ticker" id="goalTicker" aria-live="polite" aria-atomic="true">
@@ -882,7 +1084,7 @@ body::after {
     </div>
   </div>
 
-  <div class="section">
+  <div class="section" id="habits">
     <div class="section-title">Habit Tracker</div>
     <div class="gm-card habit-card">
       <div class="habit-market" aria-live="polite" aria-atomic="true">
@@ -905,7 +1107,7 @@ body::after {
         </div>
       </div>
       <div class="habit-list" id="habitList"></div>
-      <div class="goal-input-wrap gm-input-wrap">
+      <div class="goal-input-wrap gm-input-wrap habit-add-wrap">
         <input id="habitInput" class="gm-input" type="text" placeholder="Add a habit..." autocomplete="off">
         <button type="button" id="habitAddBtn" class="gm-add">+ Add</button>
       </div>
@@ -916,7 +1118,7 @@ body::after {
     </div>
   </div>
 
-  <div class="section">
+  <div class="section" id="record">
     <div class="section-title">Habit Record</div>
     <div class="gm-card habit-grid-card">
       <div class="habit-grid-head">
@@ -933,7 +1135,7 @@ body::after {
     </div>
   </div>
 
-  <div class="section">
+  <div class="section" id="todo">
     <div class="section-title">To Do List</div>
 
     <!-- TODAY -->
@@ -1237,6 +1439,87 @@ body::after {
       });
     });
   }
+  function renderDashboardChart(state) {
+    const svg = document.getElementById('dashHabitChart');
+    if (!svg) return;
+    const habits = state.habits || [];
+    const today = new Date(getActiveDateString() + 'T12:00:00');
+    const rows = [];
+    for (let i = 6; i >= 0; i--) {
+      const d = new Date(today);
+      d.setDate(today.getDate() - i);
+      const key = dateToKey(d);
+      const done = habits.filter(h => isHabitDone(state, h.id, key)).length;
+      rows.push({ key, label: ['S','M','T','W','T','F','S'][d.getDay()], done, total: habits.length });
+    }
+    svg.innerHTML = '';
+    const ns = 'http://www.w3.org/2000/svg';
+    const w = 320, h = 150, base = 124;
+    rows.forEach((row, idx) => {
+      const ratio = row.total ? row.done / row.total : 0;
+      const x = 24 + idx * 42;
+      const barH = Math.max(4, ratio * 82);
+      const rect = document.createElementNS(ns, 'rect');
+      rect.setAttribute('x', x);
+      rect.setAttribute('y', base - barH);
+      rect.setAttribute('width', 24);
+      rect.setAttribute('height', barH);
+      rect.setAttribute('rx', 6);
+      rect.setAttribute('fill', ratio >= 1 ? '#9BDBFF' : ratio > 0 ? 'rgba(91,180,232,0.72)' : 'rgba(125,211,252,0.12)');
+      svg.appendChild(rect);
+
+      const text = document.createElementNS(ns, 'text');
+      text.setAttribute('x', x + 12);
+      text.setAttribute('y', 142);
+      text.setAttribute('text-anchor', 'middle');
+      text.setAttribute('font-size', '9');
+      text.setAttribute('font-family', 'ui-monospace, SF Mono, Menlo, Consolas, monospace');
+      text.setAttribute('fill', 'rgba(250,250,250,0.42)');
+      text.textContent = row.label;
+      svg.appendChild(text);
+    });
+
+    const linePoints = rows.map((row, idx) => {
+      const ratio = row.total ? row.done / row.total : 0;
+      return (36 + idx * 42) + ',' + (base - Math.max(4, ratio * 82));
+    }).join(' ');
+    const poly = document.createElementNS(ns, 'polyline');
+    poly.setAttribute('points', linePoints);
+    poly.setAttribute('fill', 'none');
+    poly.setAttribute('stroke', '#6BE3A4');
+    poly.setAttribute('stroke-width', '2');
+    poly.setAttribute('stroke-linecap', 'round');
+    poly.setAttribute('stroke-linejoin', 'round');
+    svg.appendChild(poly);
+  }
+  function dayProgress() {
+    const now = new Date();
+    const hours = now.getHours() + now.getMinutes() / 60 + now.getSeconds() / 3600;
+    if (hours <= WAKE_HOUR) return 0;
+    if (hours >= SLEEP_HOUR) return 100;
+    return Math.round((hours - WAKE_HOUR) / (SLEEP_HOUR - WAKE_HOUR) * 100);
+  }
+  function renderDashboardOverview() {
+    const goals = getGoals(todayKey());
+    const goalDone = goals.filter(g => g.done).length;
+    const habitState = getHabitState();
+    const today = getActiveDateString();
+    const habitDone = habitState.habits.filter(h => isHabitDone(habitState, h.id, today)).length;
+    const streak = loadStreak();
+    const dayPct = dayProgress();
+
+    const dateEl = document.getElementById('dashDateLabel');
+    if (dateEl) dateEl.textContent = formatDate(today).toUpperCase();
+    document.getElementById('dashGoalsValue').textContent = goalDone + '/' + goals.length;
+    document.getElementById('dashGoalsNote').textContent = goals.length ? Math.round(goalDone / goals.length * 100) + '% complete' : 'No goals yet';
+    document.getElementById('dashHabitsValue').textContent = habitDone + '/' + habitState.habits.length;
+    document.getElementById('dashHabitsNote').textContent = habitState.habits.length ? Math.round(habitDone / habitState.habits.length * 100) + '% complete today' : 'Add habits below';
+    document.getElementById('dashStreakValue').textContent = streak.count + 'd';
+    document.getElementById('dashDayValue').textContent = dayPct + '%';
+    document.getElementById('dashDayNote').textContent = dayPct < 100 ? 'Awake progress' : 'Past bedtime';
+    document.getElementById('dashChartValue').textContent = habitDone + '/' + habitState.habits.length + ' today';
+    renderDashboardChart(habitState);
+  }
   function bindHabitAdd() {
     const input = document.getElementById('habitInput');
     const btn = document.getElementById('habitAddBtn');
@@ -1287,6 +1570,7 @@ body::after {
       list.appendChild(row);
     });
     renderHabitGrid(state);
+    renderDashboardOverview();
   }
 
   // ---------- rollover: pull undone older goals into today ----------
@@ -1387,6 +1671,7 @@ body::after {
 
   window.addEventListener('goals-changed', () => {
     renderGoalTicker();
+    renderDashboardOverview();
   });
 
   // ---------- Day Ring ----------
@@ -1695,6 +1980,7 @@ body::after {
   function loadToday() {
     const goals = getGoals(todayKey());
     renderListInto(goals, document.getElementById('goalList'), document.getElementById('emptyState'), todayKey(), false);
+    renderDashboardOverview();
   }
   function bindGoalFilters() {
     document.querySelectorAll('[data-goal-filter]').forEach(btn => {
@@ -1836,16 +2122,20 @@ body::after {
   bindGoalFilters();
   bindManualSync();
   updateDayRing();
-  setInterval(updateDayRing, 60 * 1000);
+  renderDashboardOverview();
+  setInterval(() => {
+    updateDayRing();
+    renderDashboardOverview();
+  }, 60 * 1000);
   startTicker();
   startHabitTicker();
 
   // Re-render when storage changes from another tab (or our bridged parent).
   window.addEventListener('storage', () => {
-    loadToday(); renderStreak(); renderHabits(); renderHabitMarket();
+    loadToday(); renderStreak(); renderHabits(); renderHabitMarket(); renderDashboardOverview();
   });
   window.addEventListener('habits-changed', () => {
-    renderHabits(); renderHabitMarket();
+    renderHabits(); renderHabitMarket(); renderDashboardOverview();
   });
 })();
 </script>
