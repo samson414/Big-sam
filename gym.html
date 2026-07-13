@@ -17,6 +17,7 @@
 <script>
 const CONFIG = {
   appTitle: "Training Console",
+  routineVersion: "sam-ppl-2026-07",
 
   // Weight unit shown everywhere. "kg" or "lb".
   units: "kg",
@@ -1848,6 +1849,38 @@ img, video, canvas, svg { max-width: 100%; }
       id: 'seed_' + i + '_' + Date.now()
     }, e));
   }
+  function mergeRoutineSeed(s) {
+    const version = CONFIG.routineVersion || 'default';
+    if (s.routineSeedVersion === version) return s;
+    const byName = new Map((s.exercises || []).map(ex => [String(ex.name || '').trim().toLowerCase(), ex]));
+    (CONFIG.defaultExercises || []).forEach((seed, i) => {
+      const key = String(seed.name || '').trim().toLowerCase();
+      if (!key) return;
+      if (byName.has(key)) {
+        Object.assign(byName.get(key), seed, { id: byName.get(key).id });
+      } else {
+        const ex = Object.assign({ id: 'routine_' + i + '_' + Date.now() }, seed);
+        s.exercises.push(ex);
+        byName.set(key, ex);
+      }
+    });
+    s.gyms = CONFIG.gyms.slice();
+    s.days = CONFIG.days.slice();
+    s.splitRotation = (CONFIG.splitRotation || ['pull', 'push', 'legs', 'rest']).map(x =>
+      (CONFIG.days || []).find(d => d.id === x) ? (CONFIG.days.find(d => d.id === x).name) :
+      (x === 'rest' ? 'Rest' : x.charAt(0).toUpperCase() + x.slice(1))
+    );
+    const anchorId = CONFIG.splitAnchor && CONFIG.splitAnchor.splitId;
+    const anchorDay = (CONFIG.days || []).find(d => d.id === anchorId);
+    s.splitAnchor = {
+      date: (CONFIG.splitAnchor && CONFIG.splitAnchor.date) || new Date().toISOString().slice(0, 10),
+      index: Math.max(0, s.splitRotation.indexOf(anchorDay ? anchorDay.name : 'Pull'))
+    };
+    s.filterGym = s.gyms[0] ? s.gyms[0].id : s.filterGym;
+    s.routineSeedVersion = version;
+    s._routineSeedChanged = true;
+    return s;
+  }
   function loadState() {
     try {
       const raw = localStorage.getItem(LS_KEY);
@@ -1861,6 +1894,7 @@ img, video, canvas, svg { max-width: 100%; }
     s.gyms  = (Array.isArray(s.gyms)  && s.gyms.length)  ? s.gyms  : CONFIG.gyms.slice();
     s.days  = (Array.isArray(s.days)  && s.days.length)  ? s.days  : CONFIG.days.slice();
     s.exercises = Array.isArray(s.exercises) ? s.exercises : buildDefaultExercises();
+    mergeRoutineSeed(s);
     s.logs = (s.logs && typeof s.logs === 'object') ? s.logs : {};
     s.filterGym = s.filterGym || s.gyms[0].id;
     s.filterDay = s.filterDay || s.days[0].id;
@@ -1894,6 +1928,10 @@ img, video, canvas, svg { max-width: 100%; }
     try { localStorage.setItem(LS_KEY, JSON.stringify(state)); } catch (e) {}
   }
   let state = loadState();
+  if (state._routineSeedChanged) {
+    delete state._routineSeedChanged;
+    saveState();
+  }
   document.getElementById('appTitle').textContent = CONFIG.appTitle || 'Progressive Overload Coach';
 
   // ============================================================
