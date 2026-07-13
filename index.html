@@ -265,22 +265,30 @@ body::after {
   color: var(--text-tertiary);
 }
 .habit-market-stage {
-  position: relative; flex: 1; height: 18px; overflow: hidden;
+  flex: 1; overflow: hidden;
 }
-.habit-market-row {
-  position: absolute; inset: 0;
+.habit-market-track {
   display: flex; align-items: center; gap: 8px;
+  width: max-content;
   font-family: var(--font-mono);
   font-size: 12px; font-weight: 700;
   color: var(--text-primary);
   white-space: nowrap;
-  opacity: 1;
-  transform: translateY(0);
-  transition: opacity 0.22s ease, transform 0.22s ease;
+  animation: habit-tape 18s linear infinite;
 }
-.habit-market-row.is-rotating { opacity: 0; transform: translateY(-6px); }
+.habit-market:hover .habit-market-track {
+  animation-play-state: paused;
+}
+.habit-market-item {
+  display: inline-flex; align-items: center; gap: 8px;
+  padding-right: 20px;
+}
 .habit-market-symbol { color: var(--success); font-size: 10px; letter-spacing: 0.10em; }
-.habit-market-text { overflow: hidden; text-overflow: ellipsis; }
+.habit-market-text { color: var(--text-primary); }
+@keyframes habit-tape {
+  from { transform: translateX(-50%); }
+  to   { transform: translateX(0); }
+}
 .habit-summary {
   display: grid; grid-template-columns: repeat(2, 1fr); gap: 8px;
   margin-bottom: 14px;
@@ -306,7 +314,6 @@ body::after {
 }
 .habit-list {
   display: grid; gap: 8px;
-  margin-bottom: 16px;
 }
 .habit-row {
   display: flex; align-items: center; gap: 12px;
@@ -348,6 +355,62 @@ body::after {
   color: var(--text-tertiary);
   font-size: 11px;
 }
+.habit-sync-row {
+  display: flex; align-items: center; gap: 10px;
+  margin-top: 14px;
+  padding-top: 14px;
+  border-top: 1px solid rgba(255,255,255,0.06);
+}
+.habit-sync-btn {
+  border: 1px solid rgba(125,211,252,0.22);
+  border-radius: 10px;
+  background: rgba(125,211,252,0.08);
+  color: #BFEAFF;
+  font-family: var(--font-mono);
+  font-size: 10px; font-weight: 800;
+  letter-spacing: 0.10em;
+  text-transform: uppercase;
+  padding: 9px 11px;
+  cursor: pointer;
+}
+.habit-sync-status {
+  flex: 1;
+  color: var(--text-tertiary);
+  font-size: 11px;
+}
+.habit-grid-card {
+  padding: 16px;
+}
+.habit-grid-head {
+  display: flex; align-items: center; justify-content: space-between; gap: 10px;
+  margin-bottom: 12px;
+}
+.habit-grid-title {
+  font-family: var(--font-mono);
+  font-size: 10px; font-weight: 800;
+  letter-spacing: 0.16em;
+  text-transform: uppercase;
+  color: var(--text-tertiary);
+}
+.habit-grid-filters {
+  display: flex; gap: 6px;
+}
+.habit-grid-filter {
+  border: 1px solid rgba(125,211,252,0.14);
+  border-radius: 999px;
+  background: rgba(12,35,58,0.28);
+  color: #7DB7DD;
+  font-family: var(--font-mono);
+  font-size: 9px; font-weight: 800;
+  letter-spacing: 0.08em;
+  padding: 6px 8px;
+  cursor: pointer;
+}
+.habit-grid-filter.is-active {
+  background: rgba(125,211,252,0.18);
+  color: #D6F3FF;
+  border-color: rgba(125,211,252,0.36);
+}
 .habit-grid-wrap {
   overflow-x: auto;
   padding: 2px 0 4px;
@@ -364,20 +427,21 @@ body::after {
 .habit-cell {
   width: 10px; height: 10px;
   border-radius: 2px;
-  background: rgba(255,255,255,0.055);
-  border: 1px solid rgba(255,255,255,0.035);
+  background: rgba(10,28,48,0.62);
+  border: 1px solid rgba(125,211,252,0.05);
 }
-.habit-cell.l1 { background: rgba(107,227,164,0.22); }
-.habit-cell.l2 { background: rgba(107,227,164,0.42); }
-.habit-cell.l3 { background: rgba(107,227,164,0.66); }
-.habit-cell.l4 { background: #6BE3A4; box-shadow: 0 0 6px rgba(107,227,164,0.35); }
+.habit-cell.l1 { background: rgba(37,99,145,0.46); }
+.habit-cell.l2 { background: rgba(56,139,197,0.62); }
+.habit-cell.l3 { background: rgba(91,180,232,0.78); }
+.habit-cell.l4 { background: #9BDBFF; box-shadow: 0 0 6px rgba(125,211,252,0.35); }
 @media (max-width: 480px) {
   .habit-card { padding: 14px; }
   .habit-market { gap: 7px; min-height: 34px; padding: 7px 9px; }
   .habit-market-label { font-size: 7.5px; letter-spacing: 0.10em; }
-  .habit-market-row { font-size: 10px; gap: 6px; }
+  .habit-market-track { font-size: 10px; gap: 6px; }
   .habit-stat-value { font-size: 19px; }
   .habit-row { padding: 10px; }
+  .habit-grid-head { align-items: flex-start; flex-direction: column; }
 }
 
 /* ===== Component 4: section + To Do List ===== */
@@ -451,16 +515,6 @@ body::after {
   color: var(--text-tertiary);
   margin-left: 4px;
 }
-.gm-tomorrow-sub { font-size: 12px; color: var(--text-tertiary); margin-top: 4px; }
-.gm-tomorrow-count {
-  font-family: var(--font-mono);
-  font-size: 11px; font-weight: 600;
-  font-variant-numeric: tabular-nums;
-  letter-spacing: 0.04em; text-transform: uppercase;
-  color: var(--text-tertiary);
-}
-.gm-card-tomorrow .gm-progress-row { display: none; }
-
 .gm-streak {
   display: inline-flex; align-items: center; gap: 6px;
   padding: 8px 12px;
@@ -502,6 +556,61 @@ body::after {
 .gm-bar-seg-done {
   background: #6BE3A4;
   box-shadow: 0 0 6px rgba(107,227,164,0.40);
+}
+
+.gm-filterbar {
+  display: flex; gap: 6px; flex-wrap: wrap;
+  margin-bottom: 14px;
+}
+.gm-filter-btn {
+  border: 1px solid rgba(255,255,255,0.08);
+  border-radius: 999px;
+  background: rgba(255,255,255,0.035);
+  color: var(--text-tertiary);
+  font-family: var(--font-mono);
+  font-size: 10px; font-weight: 800;
+  letter-spacing: 0.10em;
+  text-transform: uppercase;
+  padding: 7px 10px;
+  cursor: pointer;
+}
+.gm-filter-btn.is-active {
+  background: rgba(255,255,255,0.10);
+  color: var(--text-primary);
+  border-color: rgba(255,255,255,0.18);
+}
+.gm-term-badge {
+  font-family: var(--font-mono);
+  font-size: 9px; font-weight: 800;
+  letter-spacing: 0.08em;
+  text-transform: uppercase;
+  color: var(--text-tertiary);
+  border: 1px solid rgba(255,255,255,0.08);
+  border-radius: 999px;
+  padding: 4px 7px;
+}
+.gm-term-select {
+  display: flex; gap: 4px;
+  padding: 3px;
+  border: 1px solid rgba(255,255,255,0.08);
+  border-radius: 999px;
+  background: rgba(255,255,255,0.035);
+}
+.gm-term-btn {
+  border: 0;
+  border-radius: 999px;
+  background: transparent;
+  color: var(--text-tertiary);
+  font-family: var(--font-mono);
+  font-size: 9px; font-weight: 800;
+  letter-spacing: 0.08em;
+  text-transform: uppercase;
+  padding: 7px 9px;
+  cursor: pointer;
+}
+.gm-term-btn.is-active {
+  background: rgba(255,255,255,0.12);
+  color: var(--text-primary);
 }
 
 .goal-list { list-style: none; margin: 0; padding: 0; }
@@ -649,27 +758,6 @@ body::after {
 }
 .gm-show-toggle:hover { color: var(--text-primary); border-color: rgba(255,255,255,0.22); }
 
-.gm-push-btn {
-  width: 100%;
-  margin-top: 14px;
-  padding: 11px;
-  border: 1px dashed rgba(255,255,255,0.16);
-  border-radius: 12px;
-  background: transparent;
-  color: var(--text-tertiary);
-  font-family: inherit;
-  font-size: 11px; font-weight: 700;
-  letter-spacing: 0.10em; text-transform: uppercase;
-  cursor: pointer;
-  transition: color 0.2s, border-color 0.2s, background 0.2s;
-}
-.gm-push-btn:hover {
-  color: var(--text-primary);
-  border-color: rgba(255,255,255,0.30);
-  border-style: solid;
-  background: rgba(255,255,255,0.04);
-}
-
 .goal-input-wrap.gm-input-wrap {
   display: flex; gap: 8px; align-items: center; flex-wrap: wrap;
   margin-top: 14px;
@@ -787,10 +875,7 @@ body::after {
       <div class="habit-market" aria-live="polite" aria-atomic="true">
         <div class="habit-market-label">HABITS</div>
         <div class="habit-market-stage" id="habitMarketStage">
-          <div class="habit-market-row">
-            <span class="habit-market-symbol">RUN</span>
-            <span class="habit-market-text">Loading habits...</span>
-          </div>
+          <div class="habit-market-track" id="habitMarketTrack"></div>
         </div>
       </div>
       <div class="habit-summary">
@@ -804,6 +889,28 @@ body::after {
         </div>
       </div>
       <div class="habit-list" id="habitList"></div>
+      <div class="goal-input-wrap gm-input-wrap">
+        <input id="habitInput" class="gm-input" type="text" placeholder="Add a habit..." autocomplete="off">
+        <button type="button" id="habitAddBtn" class="gm-add">+ Add</button>
+      </div>
+      <div class="habit-sync-row">
+        <button type="button" class="habit-sync-btn" id="manualSyncBtn">Sync now</button>
+        <div class="habit-sync-status" id="manualSyncStatus">Cloud sync is automatic.</div>
+      </div>
+    </div>
+  </div>
+
+  <div class="section">
+    <div class="section-title">Habit Record</div>
+    <div class="gm-card habit-grid-card">
+      <div class="habit-grid-head">
+        <div class="habit-grid-title">Last 14 weeks</div>
+        <div class="habit-grid-filters" id="habitGridFilters">
+          <button type="button" class="habit-grid-filter is-active" data-habit-grid="all">All</button>
+          <button type="button" class="habit-grid-filter" data-habit-grid="run">Run</button>
+          <button type="button" class="habit-grid-filter" data-habit-grid="gym">Gym</button>
+        </div>
+      </div>
       <div class="habit-grid-wrap">
         <div class="habit-grid" id="habitGrid" aria-label="Habit completion grid"></div>
       </div>
@@ -831,33 +938,22 @@ body::after {
         </div>
       </div>
       <div class="gm-bar" id="gmBar"></div>
+      <div class="gm-filterbar" id="goalFilterBar">
+        <button type="button" class="gm-filter-btn is-active" data-goal-filter="all">All</button>
+        <button type="button" class="gm-filter-btn" data-goal-filter="short">Short term</button>
+        <button type="button" class="gm-filter-btn" data-goal-filter="long">Long term</button>
+      </div>
       <ul id="goalList" class="goal-list gm-list"></ul>
       <div id="emptyState" class="empty-state">No goals for today yet — add one below.</div>
-      <button type="button" id="gmPushBtn" class="gm-push-btn" style="display:none;">Push remaining to tomorrow</button>
       <div class="goal-input-wrap gm-input-wrap">
         <input id="goalInput" class="gm-input" type="text" placeholder="Add a goal for today…" autocomplete="off">
+        <div class="gm-term-select" id="goalTermSelect" aria-label="Goal term">
+          <button type="button" class="gm-term-btn is-active" data-goal-term="short">Short</button>
+          <button type="button" class="gm-term-btn" data-goal-term="long">Long</button>
+        </div>
         <button type="button" id="goalAddBtn"    class="gm-add">+ Add</button>
         <button type="button" id="goalPolishBtn" class="gm-polish">✨ Polish</button>
         <div class="gm-status" id="polishStatus"></div>
-      </div>
-    </div>
-
-    <!-- PLAN TOMORROW -->
-    <div class="gm-card gm-card-tomorrow" id="gmCardTomorrow">
-      <div class="gm-header">
-        <div class="gm-header-left">
-          <div class="gm-eyebrow" id="tomorrowLabel">Plan tomorrow —</div>
-          <div class="gm-tomorrow-sub">Write tonight, locked until 6 AM.</div>
-        </div>
-        <div class="gm-tomorrow-count" id="gmTomorrowCount">0 planned</div>
-      </div>
-      <ul id="tomorrowList" class="goal-list gm-list"></ul>
-      <div id="tomorrowEmpty" class="empty-state">Nothing planned for tomorrow yet</div>
-      <div class="goal-input-wrap gm-input-wrap">
-        <input id="tomorrowInput" class="gm-input" type="text" placeholder="Add a goal for tomorrow…" autocomplete="off">
-        <button type="button" id="tomorrowAddBtn"    class="gm-add">+ Add</button>
-        <button type="button" id="tomorrowPolishBtn" class="gm-polish">✨ Polish</button>
-        <div class="gm-status" id="tomorrowStatus"></div>
       </div>
     </div>
   </div>
@@ -906,12 +1002,6 @@ body::after {
     }
     return dateToKey(now);
   }
-  function getTomorrowDateString() {
-    const now = new Date();
-    const d = new Date(now);
-    if (now.getHours() >= 6) d.setDate(d.getDate() + 1);
-    return dateToKey(d);
-  }
   function formatDate(yyyy_mm_dd) {
     const parts = yyyy_mm_dd.split('-').map(Number);
     const d = new Date(parts[0], parts[1] - 1, parts[2]);
@@ -921,13 +1011,23 @@ body::after {
   }
 
   function todayKey()    { return 'goals:' + getActiveDateString(); }
-  function tomorrowKey() { return 'goals:' + getTomorrowDateString(); }
 
   function getGoals(key) {
     const g = storeGet(key);
     return Array.isArray(g) ? g : [];
   }
   function setGoals(key, list) { storeSet(key, list); }
+  function goalTerm(goal) {
+    return goal && goal.term === 'long' ? 'long' : 'short';
+  }
+  function visibleGoals(goals) {
+    if (activeGoalFilter === 'short' || activeGoalFilter === 'long') {
+      return goals
+        .map((goal, idx) => ({ goal, idx }))
+        .filter(entry => goalTerm(entry.goal) === activeGoalFilter);
+    }
+    return goals.map((goal, idx) => ({ goal, idx }));
+  }
 
   // ---------- habits ----------
   const HABIT_KEY = 'habits:v1';
@@ -935,10 +1035,11 @@ body::after {
     { id: 'run', name: 'Run', createdAt: '2026-01-01T00:00:00.000Z' },
     { id: 'gym', name: 'Gym', createdAt: '2026-01-01T00:00:00.000Z' }
   ];
-  const habitStage = document.getElementById('habitMarketStage');
-  let habitCycleIdx = 0;
+  const habitTrack = document.getElementById('habitMarketTrack');
   let habitTickerTimer = null;
-  let firstHabitTick = true;
+  let activeHabitGrid = 'all';
+  let activeGoalFilter = 'all';
+  let activeGoalTerm = 'short';
 
   function getHabitState() {
     const raw = storeGet(HABIT_KEY);
@@ -957,6 +1058,14 @@ body::after {
       logs: state.logs && typeof state.logs === 'object' ? state.logs : {}
     };
   }
+  function habitIdFromName(name, state) {
+    const base = name.toLowerCase().replace(/[^a-z0-9]+/g, '-').replace(/^-|-$/g, '') || 'habit';
+    let id = base;
+    let n = 2;
+    const existing = new Set((state.habits || []).map(h => h.id));
+    while (existing.has(id)) id = base + '-' + n++;
+    return id;
+  }
   function setHabitState(state) {
     storeSet(HABIT_KEY, state);
     window.dispatchEvent(new CustomEvent('habits-changed'));
@@ -972,7 +1081,20 @@ body::after {
     else state.logs[habitId][dateStr] = true;
     setHabitState(state);
     renderHabits();
-    tickHabitMarket();
+    renderHabitMarket();
+  }
+  function addHabit(name) {
+    const clean = String(name || '').trim();
+    if (!clean) return;
+    const state = getHabitState();
+    state.habits.push({
+      id: habitIdFromName(clean, state),
+      name: clean,
+      createdAt: new Date().toISOString()
+    });
+    setHabitState(state);
+    renderHabits();
+    renderHabitMarket();
   }
   function habitStreak(state, habitId) {
     let streak = 0;
@@ -1018,33 +1140,30 @@ body::after {
       };
     });
   }
-  function tickHabitMarket() {
-    if (!habitStage) return;
+  function renderHabitMarket() {
+    if (!habitTrack) return;
     const state = getHabitState();
     const items = buildHabitMarketItems(state);
-    if (habitCycleIdx >= items.length) habitCycleIdx = 0;
-    const item = items[habitCycleIdx];
-    habitCycleIdx = (habitCycleIdx + 1) % items.length;
-    let row = habitStage.querySelector('.habit-market-row');
-    if (!row) {
-      row = document.createElement('div');
-      row.className = 'habit-market-row';
-      row.innerHTML = '<span class="habit-market-symbol"></span><span class="habit-market-text"></span>';
-      habitStage.appendChild(row);
-    }
-    const apply = () => {
-      row.querySelector('.habit-market-symbol').textContent = item.symbol;
-      row.querySelector('.habit-market-text').textContent = item.text;
-      row.classList.remove('is-rotating');
-    };
-    if (firstHabitTick) { apply(); firstHabitTick = false; return; }
-    row.classList.add('is-rotating');
-    setTimeout(apply, 220);
+    const tape = items.concat(items);
+    habitTrack.innerHTML = '';
+    tape.forEach(item => {
+      const wrap = document.createElement('span');
+      wrap.className = 'habit-market-item';
+      const symbol = document.createElement('span');
+      symbol.className = 'habit-market-symbol';
+      symbol.textContent = item.symbol;
+      const text = document.createElement('span');
+      text.className = 'habit-market-text';
+      text.textContent = item.text;
+      wrap.appendChild(symbol);
+      wrap.appendChild(text);
+      habitTrack.appendChild(wrap);
+    });
   }
   function startHabitTicker() {
-    tickHabitMarket();
+    renderHabitMarket();
     if (habitTickerTimer) clearInterval(habitTickerTimer);
-    habitTickerTimer = setInterval(tickHabitMarket, 5000);
+    habitTickerTimer = setInterval(renderHabitMarket, 5000);
   }
   function renderHabitGrid(state) {
     const grid = document.getElementById('habitGrid');
@@ -1060,14 +1179,42 @@ body::after {
       d.setDate(start.getDate() + i);
       const dateStr = dateToKey(d);
       const future = d > today;
-      const done = future ? 0 : state.habits.filter(h => isHabitDone(state, h.id, dateStr)).length;
-      const ratio = state.habits.length ? done / state.habits.length : 0;
+      const filteredHabits = activeHabitGrid === 'all'
+        ? state.habits
+        : state.habits.filter(h => h.id === activeHabitGrid);
+      const done = future ? 0 : filteredHabits.filter(h => isHabitDone(state, h.id, dateStr)).length;
+      const ratio = filteredHabits.length ? done / filteredHabits.length : 0;
       const level = ratio === 0 ? 0 : Math.max(1, Math.ceil(ratio * 4));
       const cell = document.createElement('span');
       cell.className = 'habit-cell' + (level ? ' l' + level : '');
-      cell.title = dateStr + ': ' + done + '/' + state.habits.length;
+      cell.title = dateStr + ': ' + done + '/' + filteredHabits.length;
       grid.appendChild(cell);
     }
+  }
+  function bindHabitGridFilters() {
+    document.querySelectorAll('[data-habit-grid]').forEach(btn => {
+      btn.addEventListener('click', () => {
+        activeHabitGrid = btn.dataset.habitGrid || 'all';
+        document.querySelectorAll('[data-habit-grid]').forEach(b => {
+          b.classList.toggle('is-active', b.dataset.habitGrid === activeHabitGrid);
+        });
+        renderHabitGrid(getHabitState());
+      });
+    });
+  }
+  function bindHabitAdd() {
+    const input = document.getElementById('habitInput');
+    const btn = document.getElementById('habitAddBtn');
+    if (!input || !btn) return;
+    function submit() {
+      addHabit(input.value);
+      input.value = '';
+      input.focus();
+    }
+    btn.addEventListener('click', submit);
+    input.addEventListener('keydown', (e) => {
+      if (e.key === 'Enter') { e.preventDefault(); submit(); }
+    });
   }
   function renderHabits() {
     const state = getHabitState();
@@ -1386,7 +1533,7 @@ body::after {
     cb.type = 'checkbox';
     cb.className = 'gm-check';
     cb.checked = !!goal.done;
-    if (readOnly) { cb.disabled = true; cb.title = 'Activates at 6 AM tomorrow'; }
+    if (readOnly) cb.disabled = true;
     cb.addEventListener('change', () => {
       const list = getGoals(key);
       if (!list[idx]) return;
@@ -1403,6 +1550,11 @@ body::after {
     text.textContent = goal.text;
     li.appendChild(text);
     makeInlineEdit(text, null, idx, key, reload);
+
+    const term = document.createElement('span');
+    term.className = 'gm-term-badge';
+    term.textContent = goalTerm(goal) === 'long' ? 'Long' : 'Short';
+    li.appendChild(term);
 
     const queueBtn = document.createElement('button');
     queueBtn.type = 'button';
@@ -1462,9 +1614,6 @@ body::after {
 
     const card = document.getElementById('gmCardToday');
     card.classList.toggle('gm-all-done', total > 0 && done === total);
-
-    const pushBtn = document.getElementById('gmPushBtn');
-    pushBtn.style.display = (total > 0 && done < total) ? 'block' : 'none';
   }
 
   function renderStreak() {
@@ -1473,35 +1622,32 @@ body::after {
     document.getElementById('gmStreak').classList.toggle('gm-streak-active', s.count > 0);
   }
 
-  function renderTomorrowCount() {
-    const list = getGoals(tomorrowKey());
-    document.getElementById('gmTomorrowCount').textContent = list.length + ' planned';
-    document.getElementById('tomorrowLabel').textContent =
-      'Plan tomorrow — ' + formatDate(getTomorrowDateString());
-  }
-
   function renderListInto(goals, listEl, emptyEl, key, readOnly) {
     listEl.innerHTML = '';
-    emptyEl.style.display = goals.length === 0 ? 'block' : 'none';
-    const reload = () => (key === todayKey() ? loadToday() : loadTomorrow());
+    const entries = visibleGoals(goals);
+    emptyEl.style.display = entries.length === 0 ? 'block' : 'none';
+    emptyEl.textContent = goals.length === 0
+      ? 'No goals for today yet — add one below.'
+      : 'No ' + activeGoalFilter.replace('all', '') + ' goals in this filter.';
+    const reload = loadToday;
 
-    const visible = goals.length > 5 ? goals.slice(0, 5) : goals;
-    visible.forEach((g, i) => listEl.appendChild(buildGoalRow(g, i, key, readOnly, reload)));
+    const visible = entries.length > 5 ? entries.slice(0, 5) : entries;
+    visible.forEach(entry => listEl.appendChild(buildGoalRow(entry.goal, entry.idx, key, readOnly, reload)));
 
-    if (goals.length > 5) {
+    if (entries.length > 5) {
       let expanded = false;
       const toggle = document.createElement('button');
       toggle.type = 'button';
       toggle.className = 'gm-show-toggle';
       const updateLabel = () => {
-        toggle.textContent = expanded ? 'Show less ▴' : ('Show ' + (goals.length - 5) + ' more ▾');
+        toggle.textContent = expanded ? 'Show less ▴' : ('Show ' + (entries.length - 5) + ' more ▾');
       };
       updateLabel();
       toggle.addEventListener('click', () => {
         expanded = !expanded;
         if (expanded) {
-          goals.slice(5).forEach((g, i) => {
-            const row = buildGoalRow(g, i + 5, key, readOnly, reload);
+          entries.slice(5).forEach(entry => {
+            const row = buildGoalRow(entry.goal, entry.idx, key, readOnly, reload);
             listEl.insertBefore(row, toggle);
           });
         } else {
@@ -1512,35 +1658,60 @@ body::after {
       listEl.appendChild(toggle);
     }
 
-    if (key === todayKey()) renderTodayHeader();
-    else                    renderTomorrowCount();
+    renderTodayHeader();
   }
 
   function loadToday() {
     const goals = getGoals(todayKey());
     renderListInto(goals, document.getElementById('goalList'), document.getElementById('emptyState'), todayKey(), false);
   }
-  function loadTomorrow() {
-    const goals = getGoals(tomorrowKey());
-    renderListInto(goals, document.getElementById('tomorrowList'), document.getElementById('tomorrowEmpty'), tomorrowKey(), true);
-  }
-
-  // ---------- Push remaining ----------
-  document.getElementById('gmPushBtn').addEventListener('click', () => {
-    const today    = getGoals(todayKey());
-    const remaining = today.filter(g => !g.done);
-    if (remaining.length === 0) return;
-    if (!confirm('Move ' + remaining.length + ' unchecked goal' + (remaining.length === 1 ? '' : 's') + ' to tomorrow?')) return;
-    const tomorrow = getGoals(tomorrowKey());
-    const seen = new Set(tomorrow.map(g => g.text));
-    remaining.forEach(g => {
-      if (!seen.has(g.text)) { tomorrow.push({ text: g.text, done: false }); seen.add(g.text); }
+  function bindGoalFilters() {
+    document.querySelectorAll('[data-goal-filter]').forEach(btn => {
+      btn.addEventListener('click', () => {
+        activeGoalFilter = btn.dataset.goalFilter || 'all';
+        document.querySelectorAll('[data-goal-filter]').forEach(b => {
+          b.classList.toggle('is-active', b.dataset.goalFilter === activeGoalFilter);
+        });
+        loadToday();
+      });
     });
-    setGoals(tomorrowKey(), tomorrow);
-    setGoals(todayKey(), today.filter(g => g.done));
-    loadToday(); loadTomorrow();
-  });
-
+    document.querySelectorAll('[data-goal-term]').forEach(btn => {
+      btn.addEventListener('click', () => {
+        activeGoalTerm = btn.dataset.goalTerm === 'long' ? 'long' : 'short';
+        document.querySelectorAll('[data-goal-term]').forEach(b => {
+          b.classList.toggle('is-active', b.dataset.goalTerm === activeGoalTerm);
+        });
+      });
+    });
+  }
+  function bindManualSync() {
+    const btn = document.getElementById('manualSyncBtn');
+    const status = document.getElementById('manualSyncStatus');
+    if (!btn || !status) return;
+    btn.addEventListener('click', async () => {
+      if (typeof window.cloudSyncNow !== 'function') {
+        status.textContent = 'Cloud sync is still loading.';
+        return;
+      }
+      btn.disabled = true;
+      status.textContent = 'Syncing...';
+      try {
+        await window.cloudSyncNow();
+        status.textContent = 'Synced just now.';
+      } catch (e) {
+        status.textContent = 'Sync failed. Try again when online.';
+      } finally {
+        btn.disabled = false;
+      }
+    });
+    window.addEventListener('cloud-sync-status', (e) => {
+      const detail = e.detail || {};
+      if (detail.appKey !== 'goals') return;
+      if (detail.state === 'pushed') status.textContent = 'Phone changes pushed.';
+      else if (detail.state === 'pulled') status.textContent = 'Latest cloud data loaded.';
+      else if (detail.state === 'error') status.textContent = detail.message || 'Sync needs a retry.';
+    });
+  }
   // ---------- Add + Polish handlers ----------
   function showStatus(el, message, isError) {
     el.textContent = message;
@@ -1579,7 +1750,7 @@ body::after {
   function makeAddHandlers(input, addBtn, polishBtn, key, statusEl, reload) {
     function plainAdd(text) {
       const list = getGoals(key);
-      list.push({ text, done: false });
+      list.push({ text, done: false, term: activeGoalTerm });
       setGoals(key, list);
       input.value = '';
       reload();
@@ -1621,23 +1792,18 @@ body::after {
     document.getElementById('polishStatus'),
     loadToday
   );
-  makeAddHandlers(
-    document.getElementById('tomorrowInput'),
-    document.getElementById('tomorrowAddBtn'),
-    document.getElementById('tomorrowPolishBtn'),
-    tomorrowKey(),
-    document.getElementById('tomorrowStatus'),
-    loadTomorrow
-  );
 
   // ---------- Boot ----------
   rollover();
   processStreak();
   setHabitState(getHabitState());
   loadToday();
-  loadTomorrow();
   renderStreak();
   renderHabits();
+  bindHabitGridFilters();
+  bindHabitAdd();
+  bindGoalFilters();
+  bindManualSync();
   updateDayRing();
   setInterval(updateDayRing, 60 * 1000);
   startTicker();
@@ -1645,10 +1811,10 @@ body::after {
 
   // Re-render when storage changes from another tab (or our bridged parent).
   window.addEventListener('storage', () => {
-    loadToday(); loadTomorrow(); renderStreak(); renderHabits(); tickHabitMarket();
+    loadToday(); renderStreak(); renderHabits(); renderHabitMarket();
   });
   window.addEventListener('habits-changed', () => {
-    renderHabits(); tickHabitMarket();
+    renderHabits(); renderHabitMarket();
   });
 })();
 </script>
