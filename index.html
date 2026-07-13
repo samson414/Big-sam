@@ -17,6 +17,9 @@
   --text-secondary: #B8B6B0;
   --text-tertiary: #76746E;
   --success: #6BE3A4;
+  --signal: #9BDBFF;
+  --signal-dim: rgba(155,219,255,0.34);
+  --gotham-panel: rgba(2,8,12,0.78);
   --warning: #F2C063;
   --danger: #FF6B6B;
   --font: -apple-system, BlinkMacSystemFont, "Inter", "Segoe UI", Roboto, Helvetica, Arial, sans-serif;
@@ -44,8 +47,9 @@ body::before {
   content: '';
   position: fixed; inset: 0;
   background:
-    radial-gradient(circle at 82% 14%, rgba(224, 118, 88, 0.16), transparent 45%),
-    radial-gradient(circle at 18% 90%, rgba(180, 180, 200, 0.06), transparent 50%);
+    radial-gradient(circle at 78% 12%, rgba(107,227,164,0.10), transparent 38%),
+    radial-gradient(circle at 18% 86%, rgba(125,211,252,0.08), transparent 48%),
+    linear-gradient(180deg, rgba(5,10,14,0.0), rgba(2,5,7,0.38));
   filter: blur(40px);
   pointer-events: none;
   z-index: -2;
@@ -112,8 +116,27 @@ body::after {
 }
 
 /* ===== Component 1: page title ===== */
+.dash-identity {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+  margin-bottom: 14px;
+}
+.bat-emblem {
+  width: 46px;
+  height: 32px;
+  flex-shrink: 0;
+  color: #8CD7CB;
+  filter: drop-shadow(0 0 10px rgba(107,227,164,0.18));
+  opacity: 0.88;
+}
+.bat-emblem svg {
+  width: 100%;
+  height: 100%;
+  display: block;
+}
 .dash-title {
-  margin: 0 0 14px;
+  margin: 0;
   font-family: var(--font-display);
   font-size: 38px;
   font-style: italic;
@@ -125,7 +148,11 @@ body::after {
   -webkit-text-fill-color: transparent;
   color: transparent;
 }
-@media (max-width: 480px) { .dash-title { font-size: 31px; } }
+@media (max-width: 480px) {
+  .dash-identity { gap: 9px; margin-bottom: 12px; }
+  .bat-emblem { width: 38px; height: 27px; }
+  .dash-title { font-size: 31px; }
+}
 
 /* ===== Dashboard Overview ===== */
 .dash-overview {
@@ -138,12 +165,25 @@ body::after {
   position: relative;
   overflow: hidden;
   border-radius: 16px;
-  border: 1px solid rgba(107,227,164,0.10);
+  border: 1px solid rgba(125,211,252,0.11);
   background:
-    radial-gradient(circle at 68% 22%, rgba(107,227,164,0.16), transparent 34%),
-    linear-gradient(180deg, rgba(255,255,255,0.045), rgba(255,255,255,0.025));
-  box-shadow: 0 16px 50px rgba(0,0,0,0.42);
+    linear-gradient(rgba(125,211,252,0.035) 1px, transparent 1px),
+    linear-gradient(90deg, rgba(125,211,252,0.025) 1px, transparent 1px),
+    radial-gradient(circle at 70% 20%, rgba(107,227,164,0.12), transparent 32%),
+    linear-gradient(180deg, rgba(5,13,18,0.92), var(--gotham-panel));
+  background-size: 100% 22px, 22px 100%, auto, auto;
+  box-shadow:
+    inset 0 1px 0 rgba(255,255,255,0.035),
+    0 16px 50px rgba(0,0,0,0.52);
   padding: 18px;
+}
+.dash-panel::after {
+  content: '';
+  position: absolute;
+  left: 0; right: 0; top: 0;
+  height: 1px;
+  background: linear-gradient(90deg, transparent, rgba(155,219,255,0.42), transparent);
+  opacity: 0.72;
 }
 .dash-panel-title {
   font-family: var(--font-display);
@@ -192,6 +232,22 @@ body::after {
   display: flex; flex-direction: column;
   min-height: 100%;
 }
+.dash-chart-card::before {
+  content: '';
+  position: absolute;
+  inset: 42px 12px 12px;
+  border-radius: 14px;
+  background: linear-gradient(115deg, transparent 0 42%, rgba(155,219,255,0.08) 50%, transparent 58%);
+  transform: translateX(-110%);
+  animation: radar-sweep 8.5s linear infinite;
+  pointer-events: none;
+}
+@keyframes radar-sweep {
+  0% { transform: translateX(-110%); opacity: 0; }
+  12% { opacity: 0.8; }
+  45% { opacity: 0.2; }
+  100% { transform: translateX(110%); opacity: 0; }
+}
 .dash-chart-head {
   display: flex; align-items: center; justify-content: space-between; gap: 10px;
   margin-bottom: 10px;
@@ -206,18 +262,23 @@ body::after {
 .dash-chart-value {
   font-family: var(--font-mono);
   font-size: 12px; font-weight: 800;
-  color: #9BDBFF;
+  color: var(--signal);
+  text-shadow: 0 0 10px rgba(155,219,255,0.22);
 }
 .dash-chart {
   width: 100%;
   height: 130px;
   display: block;
   border-radius: 12px;
+  border: 1px solid rgba(125,211,252,0.08);
   background:
-    linear-gradient(rgba(125,211,252,0.06) 1px, transparent 1px),
-    linear-gradient(90deg, rgba(125,211,252,0.04) 1px, transparent 1px),
-    rgba(0,0,0,0.16);
-  background-size: 100% 25%, 12.5% 100%, auto;
+    radial-gradient(circle at 50% 50%, rgba(107,227,164,0.08), transparent 48%),
+    repeating-linear-gradient(0deg, rgba(125,211,252,0.08) 0, rgba(125,211,252,0.08) 1px, transparent 1px, transparent 18px),
+    repeating-linear-gradient(90deg, rgba(125,211,252,0.055) 0, rgba(125,211,252,0.055) 1px, transparent 1px, transparent 32px),
+    rgba(0,0,0,0.24);
+  box-shadow:
+    inset 0 0 22px rgba(125,211,252,0.055),
+    0 0 18px rgba(107,227,164,0.035);
 }
 .dash-chart + .dash-chart-head { margin-top: 14px; }
 @media (max-width: 820px) {
@@ -478,6 +539,12 @@ body::after {
 .habit-row.is-done {
   border-color: rgba(107,227,164,0.24);
   background: rgba(107,227,164,0.08);
+  animation: habit-window-flare 0.42s ease-out;
+}
+@keyframes habit-window-flare {
+  0% { box-shadow: 0 0 0 rgba(107,227,164,0); }
+  38% { box-shadow: 0 0 22px rgba(107,227,164,0.16); }
+  100% { box-shadow: 0 0 0 rgba(107,227,164,0); }
 }
 .habit-check {
   width: 28px; height: 28px;
@@ -519,19 +586,22 @@ body::after {
 .habit-detail-link {
   flex-shrink: 0;
   padding: 7px 10px;
-  border: 1px solid rgba(155,219,255,0.18);
+  border: 1px solid rgba(155,219,255,0.22);
   border-radius: 999px;
-  background: rgba(155,219,255,0.08);
-  color: #9BDBFF;
+  background:
+    linear-gradient(180deg, rgba(155,219,255,0.12), rgba(155,219,255,0.045));
+  color: var(--signal);
   text-decoration: none;
   font-family: var(--font-mono);
   font-size: 9px; font-weight: 800;
   letter-spacing: 0.10em;
   text-transform: uppercase;
+  box-shadow: inset 0 0 12px rgba(155,219,255,0.045);
 }
 .habit-detail-link:hover {
   border-color: rgba(155,219,255,0.34);
   background: rgba(155,219,255,0.14);
+  box-shadow: 0 0 12px rgba(155,219,255,0.12);
 }
 .habit-sync-row {
   display: flex; align-items: center; gap: 10px;
@@ -558,6 +628,9 @@ body::after {
 }
 .habit-grid-card {
   padding: 16px;
+  background:
+    linear-gradient(180deg, rgba(3,11,16,0.92), rgba(2,6,10,0.84)),
+    rgba(255,255,255,0.03);
 }
 .habit-grid-head {
   display: flex; align-items: center; justify-content: space-between; gap: 10px;
@@ -591,27 +664,52 @@ body::after {
 }
 .habit-grid-wrap {
   overflow-x: auto;
-  padding: 2px 0 4px;
+  padding: 10px 0 4px;
+  background:
+    linear-gradient(90deg, rgba(125,211,252,0.04) 1px, transparent 1px),
+    linear-gradient(rgba(125,211,252,0.035) 1px, transparent 1px);
+  background-size: 26px 100%, 100% 13px;
+  border-radius: 10px;
 }
 .habit-grid {
   display: grid;
   grid-auto-flow: column;
-  grid-template-rows: repeat(7, 10px);
-  grid-auto-columns: 10px;
-  gap: 3px;
+  grid-template-rows: repeat(7, 12px);
+  grid-auto-columns: 9px;
+  gap: 2px 4px;
   width: max-content;
   min-width: 100%;
+  align-items: end;
 }
 .habit-cell {
-  width: 10px; height: 10px;
-  border-radius: 2px;
-  background: rgba(10,28,48,0.62);
-  border: 1px solid rgba(125,211,252,0.05);
+  width: 9px; height: 12px;
+  border-radius: 1px 1px 3px 3px;
+  background:
+    linear-gradient(180deg, rgba(8,24,36,0.92), rgba(3,10,16,0.94));
+  border: 1px solid rgba(125,211,252,0.07);
+  box-shadow: inset 0 1px 0 rgba(255,255,255,0.025);
 }
-.habit-cell.l1 { background: rgba(37,99,145,0.46); }
-.habit-cell.l2 { background: rgba(56,139,197,0.62); }
-.habit-cell.l3 { background: rgba(91,180,232,0.78); }
-.habit-cell.l4 { background: #9BDBFF; box-shadow: 0 0 6px rgba(125,211,252,0.35); }
+.habit-cell.l1 {
+  background: linear-gradient(180deg, rgba(31,94,126,0.72), rgba(11,38,58,0.86));
+  border-color: rgba(155,219,255,0.16);
+}
+.habit-cell.l2 {
+  background: linear-gradient(180deg, rgba(56,139,197,0.84), rgba(15,58,84,0.9));
+  border-color: rgba(155,219,255,0.22);
+  box-shadow: 0 0 5px rgba(91,180,232,0.16);
+}
+.habit-cell.l3 {
+  background: linear-gradient(180deg, rgba(91,180,232,0.96), rgba(24,91,124,0.92));
+  border-color: rgba(155,219,255,0.32);
+  box-shadow: 0 0 8px rgba(91,180,232,0.28);
+}
+.habit-cell.l4 {
+  background: linear-gradient(180deg, #D5F8FF, #75D8FF 58%, #2D7897);
+  border-color: rgba(213,248,255,0.62);
+  box-shadow:
+    0 0 6px rgba(125,211,252,0.55),
+    0 0 14px rgba(107,227,164,0.22);
+}
 @media (max-width: 480px) {
   .habit-card { padding: 14px; }
   .habit-market { gap: 7px; min-height: 34px; padding: 7px 9px; }
@@ -1025,12 +1123,28 @@ body::after {
     font-size: 12px;
   }
 }
+@media (prefers-reduced-motion: reduce) {
+  body::before,
+  .dash-chart-card::before,
+  .goal-ticker::after,
+  .habit-row.is-done {
+    animation: none;
+  }
+}
 </style>
 </head>
 <body>
 <div class="page">
 
-  <h1 class="dash-title">Better Sam</h1>
+  <div class="dash-identity" aria-label="Better Sam dashboard">
+    <div class="bat-emblem" aria-hidden="true">
+      <svg viewBox="0 0 92 56" fill="none" xmlns="http://www.w3.org/2000/svg">
+        <path d="M4 28C15 26 23 20 28 10C31 19 36 23 46 23C56 23 61 19 64 10C69 20 77 26 88 28C76 32 67 38 62 50C55 43 50 40 46 40C42 40 37 43 30 50C25 38 16 32 4 28Z" fill="currentColor" fill-opacity="0.88"/>
+        <path d="M13 29C23 28 31 25 37 18M79 29C69 28 61 25 55 18M35 39C39 35 43 33 46 33C49 33 53 35 57 39" stroke="rgba(255,255,255,0.28)" stroke-width="1.5" stroke-linecap="round"/>
+      </svg>
+    </div>
+    <h1 class="dash-title">Better Sam</h1>
+  </div>
 
   <nav class="quick-nav" aria-label="Dashboard sections">
     <a href="#dashboard">Dash</a>
