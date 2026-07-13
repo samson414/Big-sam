@@ -1370,7 +1370,7 @@ body::after {
       const done = isHabitDone(state, h.id, getActiveDateString());
       return {
         symbol: h.name.slice(0, 3).toUpperCase(),
-        text: h.name + ' ' + (done ? 'closed green' : 'open') + ' · ' + streak + 'd streak'
+        text: h.name + ' ' + (done ? 'complete' : 'pending') + ' · ' + streak + 'd streak'
       };
     });
   }
