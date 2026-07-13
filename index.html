@@ -210,7 +210,7 @@ body::after {
 }
 .dash-chart {
   width: 100%;
-  height: 150px;
+  height: 130px;
   display: block;
   border-radius: 12px;
   background:
@@ -219,6 +219,7 @@ body::after {
     rgba(0,0,0,0.16);
   background-size: 100% 25%, 12.5% 100%, auto;
 }
+.dash-chart + .dash-chart-head { margin-top: 14px; }
 @media (max-width: 820px) {
   .dash-overview { grid-template-columns: 1fr; }
   .dash-metric-grid { grid-template-columns: repeat(2, minmax(0, 1fr)); }
@@ -515,6 +516,23 @@ body::after {
   opacity: 0.55;
 }
 .habit-delete:hover { color: var(--danger); opacity: 1; }
+.habit-detail-link {
+  flex-shrink: 0;
+  padding: 7px 10px;
+  border: 1px solid rgba(155,219,255,0.18);
+  border-radius: 999px;
+  background: rgba(155,219,255,0.08);
+  color: #9BDBFF;
+  text-decoration: none;
+  font-family: var(--font-mono);
+  font-size: 9px; font-weight: 800;
+  letter-spacing: 0.10em;
+  text-transform: uppercase;
+}
+.habit-detail-link:hover {
+  border-color: rgba(155,219,255,0.34);
+  background: rgba(155,219,255,0.14);
+}
 .habit-sync-row {
   display: flex; align-items: center; gap: 10px;
   margin-top: 14px;
@@ -606,6 +624,10 @@ body::after {
 
 /* ===== Component 4: section + To Do List ===== */
 .section { margin-top: 8px; }
+.section-head {
+  display: flex; align-items: center; justify-content: space-between; gap: 12px;
+}
+.section-head .section-title { flex: 1; }
 .section-title {
   font-size: 10.5px; font-weight: 700;
   letter-spacing: 0.18em; text-transform: uppercase;
@@ -995,6 +1017,13 @@ body::after {
   .habit-add-wrap .gm-add {
     width: 100%;
   }
+  .section-head {
+    align-items: flex-start;
+  }
+  .section-head .gm-polish {
+    padding: 9px 12px;
+    font-size: 12px;
+  }
 }
 </style>
 </head>
@@ -1045,6 +1074,11 @@ body::after {
         <div class="dash-chart-value" id="dashChartValue">7 days</div>
       </div>
       <svg class="dash-chart" id="dashHabitChart" viewBox="0 0 320 150" role="img" aria-label="Habit completion chart"></svg>
+      <div class="dash-chart-head">
+        <div class="dash-chart-title">To-do Completion</div>
+        <div class="dash-chart-value" id="dashTodoChartValue">7 days</div>
+      </div>
+      <svg class="dash-chart" id="dashTodoChart" viewBox="0 0 320 150" role="img" aria-label="To-do completion chart"></svg>
     </div>
   </section>
 
@@ -1136,7 +1170,10 @@ body::after {
   </div>
 
   <div class="section" id="todo">
-    <div class="section-title">To Do List</div>
+    <div class="section-head">
+      <div class="section-title">To Do List</div>
+      <button type="button" id="goalPolishBtn" class="gm-polish">Polish</button>
+    </div>
 
     <!-- TODAY -->
     <div class="gm-card" id="gmCardToday">
@@ -1146,7 +1183,7 @@ body::after {
           <div class="gm-progress-row">
             <span class="gm-progress-num"   id="gmProgressNum">0</span>
             <span class="gm-progress-total" id="gmProgressTotal">/ 0</span>
-            <span class="gm-progress-label" id="gmProgressLabel">no goals yet</span>
+            <span class="gm-progress-label" id="gmProgressLabel">no to-dos yet</span>
           </div>
         </div>
         <div class="gm-streak" id="gmStreak">
@@ -1162,15 +1199,14 @@ body::after {
         <button type="button" class="gm-filter-btn" data-goal-filter="long">Long term</button>
       </div>
       <ul id="goalList" class="goal-list gm-list"></ul>
-      <div id="emptyState" class="empty-state">No goals for today yet — add one below.</div>
+      <div id="emptyState" class="empty-state">No to-dos for today yet — add one below.</div>
       <div class="goal-input-wrap gm-input-wrap">
-        <input id="goalInput" class="gm-input" type="text" placeholder="Add a goal for today…" autocomplete="off">
+        <input id="goalInput" class="gm-input" type="text" placeholder="Add a to-do for today..." autocomplete="off">
         <div class="gm-term-select" id="goalTermSelect" aria-label="Goal term">
           <button type="button" class="gm-term-btn is-active" data-goal-term="short">Short</button>
           <button type="button" class="gm-term-btn" data-goal-term="long">Long</button>
         </div>
         <button type="button" id="goalAddBtn"    class="gm-add">+ Add</button>
-        <button type="button" id="goalPolishBtn" class="gm-polish">✨ Polish</button>
         <div class="gm-status" id="polishStatus"></div>
       </div>
     </div>
@@ -1492,6 +1528,49 @@ body::after {
     poly.setAttribute('stroke-linejoin', 'round');
     svg.appendChild(poly);
   }
+  function renderDashboardTodoChart() {
+    const svg = document.getElementById('dashTodoChart');
+    const label = document.getElementById('dashTodoChartValue');
+    if (!svg) return;
+    const today = new Date(getActiveDateString() + 'T12:00:00');
+    const rows = [];
+    for (let i = 6; i >= 0; i--) {
+      const d = new Date(today);
+      d.setDate(today.getDate() - i);
+      const key = dateToKey(d);
+      const list = getGoals('goals:' + key);
+      const done = list.filter(g => g.done).length;
+      rows.push({ label: ['S','M','T','W','T','F','S'][d.getDay()], done, total: list.length });
+    }
+    svg.innerHTML = '';
+    const ns = 'http://www.w3.org/2000/svg';
+    const base = 124;
+    rows.forEach((row, idx) => {
+      const ratio = row.total ? row.done / row.total : 0;
+      const x = 24 + idx * 42;
+      const barH = Math.max(4, ratio * 82);
+      const rect = document.createElementNS(ns, 'rect');
+      rect.setAttribute('x', x);
+      rect.setAttribute('y', base - barH);
+      rect.setAttribute('width', 24);
+      rect.setAttribute('height', barH);
+      rect.setAttribute('rx', 6);
+      rect.setAttribute('fill', ratio >= 1 ? '#6BE3A4' : ratio > 0 ? 'rgba(107,227,164,0.66)' : 'rgba(107,227,164,0.10)');
+      svg.appendChild(rect);
+
+      const text = document.createElementNS(ns, 'text');
+      text.setAttribute('x', x + 12);
+      text.setAttribute('y', 142);
+      text.setAttribute('text-anchor', 'middle');
+      text.setAttribute('font-size', '9');
+      text.setAttribute('font-family', 'ui-monospace, SF Mono, Menlo, Consolas, monospace');
+      text.setAttribute('fill', 'rgba(250,250,250,0.42)');
+      text.textContent = row.label;
+      svg.appendChild(text);
+    });
+    const todayRow = rows[rows.length - 1] || { done: 0, total: 0 };
+    if (label) label.textContent = todayRow.done + '/' + todayRow.total + ' today';
+  }
   function dayProgress() {
     const now = new Date();
     const hours = now.getHours() + now.getMinutes() / 60 + now.getSeconds() / 3600;
@@ -1519,6 +1598,7 @@ body::after {
     document.getElementById('dashDayNote').textContent = dayPct < 100 ? 'Awake progress' : 'Past bedtime';
     document.getElementById('dashChartValue').textContent = habitDone + '/' + habitState.habits.length + ' today';
     renderDashboardChart(habitState);
+    renderDashboardTodoChart();
   }
   function bindHabitAdd() {
     const input = document.getElementById('habitInput');
@@ -1559,6 +1639,15 @@ body::after {
       row.querySelector('.habit-meta').innerHTML =
         '<span>' + habitStreak(state, h.id) + ' day streak</span>' +
         '<span>' + habitRate(state, h.id) + '% last 30d</span>';
+      if (h.id === 'run' || h.id === 'gym') {
+        const detail = document.createElement('a');
+        detail.className = 'habit-detail-link';
+        detail.href = 'gym.html?mode=' + encodeURIComponent(h.id);
+        detail.textContent = 'View';
+        detail.addEventListener('click', e => e.stopPropagation());
+        detail.addEventListener('keydown', e => e.stopPropagation());
+        row.appendChild(detail);
+      }
       row.addEventListener('click', () => toggleHabit(h.id));
       row.addEventListener('keydown', (e) => {
         if (e.key === 'Enter' || e.key === ' ') { e.preventDefault(); toggleHabit(h.id); }
@@ -1913,8 +2002,8 @@ body::after {
     document.getElementById('gmProgressNum').textContent   = done;
     document.getElementById('gmProgressTotal').textContent = '/ ' + total;
     const label = document.getElementById('gmProgressLabel');
-    if (total === 0)        label.textContent = 'no goals yet';
-    else if (done === total) label.textContent = 'all done — solid day';
+    if (total === 0)        label.textContent = 'no to-dos yet';
+    else if (done === total) label.textContent = 'all done';
     else                     label.textContent = 'complete';
 
     document.getElementById('todayLabel').textContent =
@@ -1943,8 +2032,8 @@ body::after {
     const entries = visibleGoals(goals);
     emptyEl.style.display = entries.length === 0 ? 'block' : 'none';
     emptyEl.textContent = goals.length === 0
-      ? 'No goals for today yet — add one below.'
-      : 'No ' + activeGoalFilter.replace('all', '') + ' goals in this filter.';
+      ? 'No to-dos for today yet — add one below.'
+      : 'No ' + activeGoalFilter.replace('all', '') + ' to-dos in this filter.';
     const reload = loadToday;
 
     const visible = entries.length > 5 ? entries.slice(0, 5) : entries;
@@ -2085,7 +2174,7 @@ body::after {
       if (!text) return;
       if (!ANTHROPIC_API_KEY) {
         plainAdd(text);
-        showStatus(statusEl, 'Polish needs an Anthropic API key — added as-typed.', false);
+        showStatus(statusEl, 'Polish needs an Anthropic API key - added as-typed.', false);
         return;
       }
       polishBtn.disabled = true;
@@ -2094,7 +2183,7 @@ body::after {
         plainAdd(polished);
       } catch (e) {
         plainAdd(text);
-        showStatus(statusEl, 'Polish failed — added as-typed.', true);
+        showStatus(statusEl, 'Polish failed - added as-typed.', true);
       } finally {
         polishBtn.disabled = false;
       }

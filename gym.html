@@ -16,7 +16,7 @@
      ============================================================= -->
 <script>
 const CONFIG = {
-  appTitle: "Progressive Overload Coach",
+  appTitle: "Training Console",
 
   // Weight unit shown everywhere. "kg" or "lb".
   units: "kg",
@@ -24,8 +24,8 @@ const CONFIG = {
   // Gyms you train at. Add as many as you want.
   // `id` must be a short unique slug (no spaces). `name` is what people see.
   gyms: [
-    { id: "home",  name: "Home Gym" },
-    { id: "comm",  name: "Commercial Gym" }
+    { id: "main",  name: "Main Gym" },
+    { id: "alt",   name: "Alt Gym" }
   ],
 
   // Training split. Most people use Push/Pull/Legs but you can rename
@@ -39,15 +39,15 @@ const CONFIG = {
   // Split rotation — the order your training days cycle through. Use day
   // ids from `days` above, plus "rest" for off-days. The pill at the top
   // of the app reads this + splitAnchor to compute "what day is today".
-  splitRotation: ["push", "pull", "legs", "rest"],
+  splitRotation: ["pull", "push", "legs", "rest"],
 
   // Anchor: pair a real calendar date with which split day fell on it.
   // The rotation advances from this point. Set `date` to a recent day
   // when you knew what split you were on, and `splitId` to that day.
   // Edit this if your split drifts.
   splitAnchor: {
-    date: "2026-05-12",
-    splitId: "rest"
+    date: "2026-07-13",
+    splitId: "pull"
   },
 
   // Progression rule: hit this many reps on the top set → coach tells you
@@ -78,15 +78,26 @@ const CONFIG = {
   // First-run defaults. Once a user logs anything, they edit through
   // the in-app + / gear buttons; this block stays as the seed.
   defaultExercises: [
-    { name: "Bench press",     gym: "comm", day: "push", repMin: 5, repMax: 8,  step: 2.5, startWeight: 60 },
-    { name: "Overhead press",  gym: "comm", day: "push", repMin: 5, repMax: 8,  step: 2.5, startWeight: 35 },
-    { name: "Tricep pushdown", gym: "comm", day: "push", repMin: 8, repMax: 12, step: 2.5, startWeight: 25 },
-    { name: "Pull-ups",        gym: "both", day: "pull", repMin: 5, repMax: 10, step: 1,   startWeight: 0, bw: true },
-    { name: "Barbell row",     gym: "comm", day: "pull", repMin: 6, repMax: 10, step: 2.5, startWeight: 50 },
-    { name: "Bicep curl",      gym: "comm", day: "pull", repMin: 8, repMax: 12, step: 1.25,startWeight: 15 },
-    { name: "Back squat",      gym: "comm", day: "legs", repMin: 5, repMax: 8,  step: 5,   startWeight: 80 },
-    { name: "Romanian deadlift", gym: "comm", day: "legs", repMin: 6, repMax: 10, step: 5, startWeight: 60 },
-    { name: "Leg press",       gym: "comm", day: "legs", repMin: 8, repMax: 12, step: 5,   startWeight: 100 }
+    { name: "Deadlift", gym: "main", day: "pull", repMin: 5, repMax: 8, step: 2.5, startWeight: 50 },
+    { name: "Barbell row", gym: "main", day: "pull", repMin: 5, repMax: 8, step: 2.5, startWeight: 50 },
+    { name: "Pulldown", gym: "main", day: "pull", repMin: 8, repMax: 12, step: 1.25, startWeight: 12.5 },
+    { name: "Seated cable row", gym: "main", day: "pull", repMin: 8, repMax: 12, step: 2.5, startWeight: 47 },
+    { name: "Face pull", gym: "main", day: "pull", repMin: 15, repMax: 20, step: 1.25, startWeight: 16.75 },
+    { name: "Hammer curl", gym: "main", day: "pull", repMin: 8, repMax: 12, step: 1.25, startWeight: 0 },
+    { name: "Dumbbell curl", gym: "main", day: "pull", repMin: 8, repMax: 12, step: 1.25, startWeight: 0 },
+    { name: "Bench press", gym: "main", day: "push", repMin: 5, repMax: 8, step: 2.5, startWeight: 50 },
+    { name: "Overhead press", gym: "main", day: "push", repMin: 5, repMax: 8, step: 2.5, startWeight: 30 },
+    { name: "Iso-lateral shoulder press", gym: "main", day: "push", repMin: 12, repMax: 12, step: 2.5, startWeight: 25 },
+    { name: "Chest press", gym: "main", day: "push", repMin: 8, repMax: 8, step: 2.5, startWeight: 47 },
+    { name: "Incline dumbbell press", gym: "main", day: "push", repMin: 8, repMax: 12, step: 1.25, startWeight: 0 },
+    { name: "Triceps pushdown", gym: "main", day: "push", repMin: 8, repMax: 12, step: 1.25, startWeight: 13 },
+    { name: "Lateral raise", gym: "main", day: "push", repMin: 15, repMax: 20, step: 1.25, startWeight: 0 },
+    { name: "Overhead triceps extension", gym: "main", day: "push", repMin: 8, repMax: 12, step: 1.25, startWeight: 0 },
+    { name: "Squat", gym: "main", day: "legs", repMin: 5, repMax: 8, step: 2.5, startWeight: 50 },
+    { name: "Romanian deadlift", gym: "main", day: "legs", repMin: 8, repMax: 12, step: 2.5, startWeight: 50 },
+    { name: "Leg press", gym: "main", day: "legs", repMin: 8, repMax: 12, step: 5, startWeight: 0 },
+    { name: "Leg curl", gym: "main", day: "legs", repMin: 8, repMax: 12, step: 2.5, startWeight: 0 },
+    { name: "Calf raise", gym: "main", day: "legs", repMin: 8, repMax: 12, step: 2.5, startWeight: 0 }
   ]
 };
 </script>
@@ -237,6 +248,92 @@ img, video, canvas, svg { max-width: 100%; }
   -webkit-tap-highlight-color: transparent;
 }
 .po-icon-btn:hover { background: rgba(255,255,255,0.08); color: var(--text-1); }
+
+.training-hub {
+  display: grid;
+  grid-template-columns: minmax(0, 0.9fr) minmax(0, 1.1fr);
+  gap: 12px;
+  margin-bottom: 14px;
+}
+.training-mode-card {
+  border: 1px solid var(--border);
+  border-radius: 16px;
+  padding: 16px;
+  background:
+    radial-gradient(circle at 80% 18%, rgba(125,211,252,0.12), transparent 32%),
+    rgba(255,255,255,0.03);
+}
+.training-mode-card.is-gym {
+  background:
+    radial-gradient(circle at 80% 18%, rgba(110,231,183,0.14), transparent 32%),
+    rgba(255,255,255,0.03);
+}
+.training-kicker {
+  font-family: var(--font-mono);
+  font-size: 10px; font-weight: 800;
+  letter-spacing: 0.14em;
+  text-transform: uppercase;
+  color: var(--text-3);
+  margin-bottom: 8px;
+}
+.training-mode-title {
+  margin: 0 0 6px;
+  font-size: 22px;
+  line-height: 1.05;
+  color: var(--text-1);
+}
+.training-mode-copy {
+  margin: 0;
+  color: var(--text-2);
+  font-size: 13px;
+  line-height: 1.45;
+}
+.training-mode-meta {
+  display: flex; flex-wrap: wrap; gap: 6px;
+  margin-top: 14px;
+}
+.training-chip {
+  border: 1px solid rgba(255,255,255,0.08);
+  border-radius: 999px;
+  padding: 5px 8px;
+  color: var(--text-2);
+  font-family: var(--font-mono);
+  font-size: 10px; font-weight: 700;
+}
+.routine-grid {
+  display: grid;
+  grid-template-columns: repeat(3, minmax(0, 1fr));
+  gap: 8px;
+  margin-top: 12px;
+}
+.routine-day {
+  border: 1px solid var(--border);
+  border-radius: 12px;
+  padding: 11px;
+  background: rgba(0,0,0,0.18);
+}
+.routine-day h3 {
+  margin: 0 0 8px;
+  font-family: var(--font-mono);
+  font-size: 10px; font-weight: 900;
+  letter-spacing: 0.14em;
+  text-transform: uppercase;
+  color: var(--good);
+}
+.routine-day ul {
+  margin: 0;
+  padding: 0;
+  list-style: none;
+  display: flex;
+  flex-direction: column;
+  gap: 7px;
+}
+.routine-day li {
+  color: var(--text-2);
+  font-size: 11.5px;
+  line-height: 1.35;
+}
+.routine-day strong { color: var(--text-1); font-weight: 700; }
 
 .card {
   background: var(--bg-card);
@@ -685,6 +782,8 @@ img, video, canvas, svg { max-width: 100%; }
 
   /* Cards — tighter padding so content has room */
   .card { padding: 16px 14px; margin-bottom: 12px; }
+  .training-hub { grid-template-columns: 1fr; }
+  .routine-grid { grid-template-columns: 1fr; }
 
   /* Gym / Day segmented controls — let labels truncate instead of pushing wider */
   .po-seg-row { gap: 8px; }
@@ -1438,6 +1537,53 @@ img, video, canvas, svg { max-width: 100%; }
       <svg viewBox="0 0 24 24" width="18" height="18" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><circle cx="12" cy="12" r="3"/><path d="M19.4 15a1.65 1.65 0 0 0 .33 1.82l.06.06a2 2 0 1 1-2.83 2.83l-.06-.06a1.65 1.65 0 0 0-1.82-.33 1.65 1.65 0 0 0-1 1.51V21a2 2 0 1 1-4 0v-.09a1.65 1.65 0 0 0-1-1.51 1.65 1.65 0 0 0-1.82.33l-.06.06a2 2 0 1 1-2.83-2.83l.06-.06a1.65 1.65 0 0 0 .33-1.82 1.65 1.65 0 0 0-1.51-1H3a2 2 0 1 1 0-4h.09a1.65 1.65 0 0 0 1.51-1 1.65 1.65 0 0 0-.33-1.82l-.06-.06a2 2 0 1 1 2.83-2.83l.06.06a1.65 1.65 0 0 0 1.82.33H9a1.65 1.65 0 0 0 1-1.51V3a2 2 0 1 1 4 0v.09a1.65 1.65 0 0 0 1 1.51 1.65 1.65 0 0 0 1.82-.33l.06-.06a2 2 0 1 1 2.83 2.83l-.06.06a1.65 1.65 0 0 0-.33 1.82V9a1.65 1.65 0 0 0 1.51 1H21a2 2 0 1 1 0 4h-.09a1.65 1.65 0 0 0-1.51 1z"/></svg>
     </button>
   </div>
+
+  <section class="training-hub" id="trainingHub" aria-label="Training prototype">
+    <div class="training-mode-card" id="runModeCard">
+      <div class="training-kicker">Run</div>
+      <h2 class="training-mode-title">Strava-ready running</h2>
+      <p class="training-mode-copy">Prototype space for pace, weekly mileage, and recent runs once Strava is connected.</p>
+      <div class="training-mode-meta">
+        <span class="training-chip">Pace trend</span>
+        <span class="training-chip">Weekly km</span>
+        <span class="training-chip">Route notes</span>
+      </div>
+    </div>
+    <div class="training-mode-card is-gym" id="gymModeCard">
+      <div class="training-kicker">Gym</div>
+      <h2 class="training-mode-title">Push / Pull / Legs</h2>
+      <p class="training-mode-copy">Your current routine is seeded below for top-set logging and progressive overload tracking.</p>
+      <div class="routine-grid">
+        <div class="routine-day">
+          <h3>Pull</h3>
+          <ul>
+            <li><strong>Deadlift / Row</strong> 50kg alternating</li>
+            <li>Pulldown 12.5kg or pullups/chinups</li>
+            <li>Seated cable row 47kg, face pull 16.75kg</li>
+            <li>Hammer curls + dumbbell curls</li>
+          </ul>
+        </div>
+        <div class="routine-day">
+          <h3>Push</h3>
+          <ul>
+            <li><strong>Bench / OHP</strong> alternating first lift</li>
+            <li>Iso shoulder press 25kg/side, chest press 47kg</li>
+            <li>Incline dumbbell press</li>
+            <li>Pushdowns 13kg, lateral raises, overhead extensions</li>
+          </ul>
+        </div>
+        <div class="routine-day">
+          <h3>Legs</h3>
+          <ul>
+            <li><strong>Squat</strong> 2x5, 1x5+</li>
+            <li>Romanian deadlift</li>
+            <li>Leg press + leg curls</li>
+            <li>Calf raises 5x8-12</li>
+          </ul>
+        </div>
+      </div>
+    </div>
+  </section>
 
   <div class="card">
     <!-- Filters -->
@@ -3259,6 +3405,11 @@ img, video, canvas, svg { max-width: 100%; }
   renderAll();
   wtRender();
   photosRender();
+  try {
+    const mode = new URLSearchParams(window.location.search).get('mode');
+    const target = mode === 'run' ? $('runModeCard') : mode === 'gym' ? $('gymModeCard') : null;
+    if (target) setTimeout(() => target.scrollIntoView({ behavior: 'smooth', block: 'start' }), 120);
+  } catch (e) {}
 
   // ============================================================
   // CLOUD SYNC via Supabase  (OPTIONAL — leave blank for local-only)
