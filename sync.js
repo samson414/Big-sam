@@ -83,11 +83,15 @@
       if (changed && typeof onApplied === 'function') { try { onApplied(); } catch (e) {} }
       return changed;
     }
-    async function pushNow() {
-      if (!supa) return;
+    async function pushNow(options) {
+      if (!supa) return false;
       const state = collect();
       const json = JSON.stringify(state);
-      if (json === lastSyncedJson) return;
+      const force = options && options.force;
+      if (!force && json === lastSyncedJson) {
+        clearDirty();
+        return true;
+      }
       try {
         const { error } = await supa.from('app_state').upsert(
           { key: appKey, data: state, updated_at: new Date().toISOString() },
@@ -97,11 +101,14 @@
           lastSyncedJson = json;
           clearDirty();
           emitStatus({ appKey, state: 'pushed', at: new Date().toISOString() });
+          return true;
         } else {
           emitStatus({ appKey, state: 'error', message: error.message || 'Sync failed' });
+          return false;
         }
       } catch (e) {
         emitStatus({ appKey, state: 'error', message: e && e.message ? e.message : 'Sync failed' });
+        return false;
       }
     }
     function schedulePush() { clearTimeout(pushTimer); pushTimer = setTimeout(pushNow, 250); }
@@ -147,11 +154,10 @@
       }
       return false;
     }
-    async function syncNow() {
+    async function syncNow(options) {
       if (!supa) return false;
-      if (isDirty()) {
-        await pushNow();
-        return true;
+      if ((options && options.forcePush) || isDirty()) {
+        return pushNow({ force: true });
       }
       return pullNow();
     }
