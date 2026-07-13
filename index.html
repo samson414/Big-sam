@@ -291,6 +291,55 @@ body::after {
   .dash-chart { height: 122px; }
 }
 
+.today-command {
+  display: grid;
+  grid-template-columns: repeat(4, minmax(0, 1fr));
+  gap: 8px;
+  margin: -4px 0 18px;
+}
+.today-command-btn {
+  min-height: 74px;
+  border: 1px solid rgba(125,211,252,0.12);
+  border-radius: 14px;
+  background:
+    linear-gradient(180deg, rgba(10,24,32,0.86), rgba(4,10,15,0.86)),
+    rgba(255,255,255,0.03);
+  color: var(--text-primary);
+  font: inherit;
+  text-align: left;
+  padding: 12px;
+  cursor: pointer;
+  box-shadow: inset 0 1px 0 rgba(255,255,255,0.035);
+}
+.today-command-label {
+  display: block;
+  font-family: var(--font-mono);
+  font-size: 9px; font-weight: 800;
+  letter-spacing: 0.14em;
+  text-transform: uppercase;
+  color: var(--signal);
+}
+.today-command-value {
+  display: block;
+  margin-top: 7px;
+  color: var(--text-secondary);
+  font-size: 12px;
+  line-height: 1.35;
+}
+.today-command-btn:hover {
+  border-color: rgba(155,219,255,0.28);
+  background:
+    linear-gradient(180deg, rgba(14,34,44,0.92), rgba(5,13,18,0.9)),
+    rgba(255,255,255,0.04);
+}
+@media (max-width: 720px) {
+  .today-command { grid-template-columns: repeat(2, minmax(0, 1fr)); }
+}
+@media (max-width: 420px) {
+  .today-command { grid-template-columns: 1fr; }
+  .today-command-btn { min-height: 58px; }
+}
+
 /* ===== Component 2: Goal Ticker ===== */
 .ticker-row {
   display: grid;
@@ -583,6 +632,45 @@ body::after {
   opacity: 0.55;
 }
 .habit-delete:hover { color: var(--danger); opacity: 1; }
+.habit-archive-panel {
+  display: none;
+  margin-top: 12px;
+  padding-top: 12px;
+  border-top: 1px solid rgba(255,255,255,0.06);
+}
+.habit-archive-panel.has-items { display: block; }
+.habit-archive-title {
+  font-family: var(--font-mono);
+  font-size: 9px; font-weight: 800;
+  letter-spacing: 0.14em;
+  text-transform: uppercase;
+  color: var(--text-tertiary);
+  margin-bottom: 8px;
+}
+.habit-archive-list {
+  display: grid;
+  gap: 6px;
+}
+.habit-archive-row {
+  display: flex; align-items: center; justify-content: space-between; gap: 10px;
+  padding: 8px 10px;
+  border-radius: 10px;
+  background: rgba(255,255,255,0.025);
+  color: var(--text-secondary);
+  font-size: 12px;
+}
+.habit-restore {
+  border: 1px solid rgba(125,211,252,0.18);
+  border-radius: 999px;
+  background: rgba(125,211,252,0.08);
+  color: #BFEAFF;
+  font-family: var(--font-mono);
+  font-size: 9px; font-weight: 800;
+  letter-spacing: 0.08em;
+  text-transform: uppercase;
+  padding: 6px 8px;
+  cursor: pointer;
+}
 .habit-detail-link {
   flex-shrink: 0;
   padding: 7px 10px;
@@ -1098,6 +1186,84 @@ body::after {
 }
 .gm-status.gm-status-error { color: var(--danger); }
 
+.quick-capture {
+  position: fixed;
+  right: max(18px, env(safe-area-inset-right));
+  bottom: calc(18px + env(safe-area-inset-bottom));
+  z-index: 30;
+}
+.quick-capture-fab {
+  width: 52px; height: 52px;
+  border: 0;
+  border-radius: 999px;
+  background: linear-gradient(180deg, #DFF7FF, #7DD3FC);
+  color: #041018;
+  font-size: 28px; font-weight: 700;
+  cursor: pointer;
+  box-shadow: 0 14px 34px rgba(0,0,0,0.45), 0 0 18px rgba(125,211,252,0.22);
+}
+.quick-capture-panel {
+  position: absolute;
+  right: 0; bottom: 64px;
+  width: min(330px, calc(100vw - 32px));
+  padding: 12px;
+  border-radius: 16px;
+  border: 1px solid rgba(125,211,252,0.16);
+  background: rgba(5,13,18,0.96);
+  box-shadow: 0 18px 46px rgba(0,0,0,0.54);
+  display: none;
+}
+.quick-capture.is-open .quick-capture-panel { display: block; }
+.quick-capture-title {
+  font-family: var(--font-mono);
+  font-size: 10px; font-weight: 800;
+  letter-spacing: 0.14em;
+  text-transform: uppercase;
+  color: var(--signal);
+  margin-bottom: 10px;
+}
+.quick-capture-row {
+  display: grid;
+  grid-template-columns: 104px 1fr;
+  gap: 8px;
+  margin-bottom: 8px;
+}
+.quick-capture select,
+.quick-capture input {
+  min-width: 0;
+  border: 1px solid rgba(255,255,255,0.09);
+  border-radius: 10px;
+  background: rgba(255,255,255,0.045);
+  color: var(--text-primary);
+  font: inherit;
+  font-size: 14px;
+  padding: 11px 12px;
+}
+.quick-capture-actions {
+  display: grid;
+  grid-template-columns: 1fr auto;
+  gap: 8px;
+}
+.quick-capture-submit,
+.quick-capture-close {
+  border-radius: 10px;
+  border: 1px solid rgba(255,255,255,0.10);
+  font: inherit;
+  font-size: 13px;
+  font-weight: 750;
+  padding: 10px 12px;
+  cursor: pointer;
+}
+.quick-capture-submit {
+  border: 0;
+  background: linear-gradient(180deg, #FFFFFF, #DCEAF0);
+  color: #071018;
+}
+.quick-capture-close {
+  background: rgba(255,255,255,0.04);
+  color: var(--text-secondary);
+}
+
 @media (max-width: 480px) {
   body { padding: max(20px, env(safe-area-inset-top)) max(14px, env(safe-area-inset-right)) calc(50px + env(safe-area-inset-bottom)) max(14px, env(safe-area-inset-left)); }
   .gm-card { padding: 16px; }
@@ -1121,6 +1287,17 @@ body::after {
   .section-head .gm-polish {
     padding: 9px 12px;
     font-size: 12px;
+  }
+  .quick-capture {
+    right: max(14px, env(safe-area-inset-right));
+    bottom: calc(14px + env(safe-area-inset-bottom));
+  }
+  .quick-capture-panel {
+    position: fixed;
+    left: max(14px, env(safe-area-inset-left));
+    right: max(14px, env(safe-area-inset-right));
+    bottom: calc(78px + env(safe-area-inset-bottom));
+    width: auto;
   }
 }
 @media (prefers-reduced-motion: reduce) {
@@ -1196,6 +1373,25 @@ body::after {
     </div>
   </section>
 
+  <section class="today-command" aria-label="Today command shortcuts">
+    <button type="button" class="today-command-btn" data-command-jump="#todo">
+      <span class="today-command-label">Next To-do</span>
+      <span class="today-command-value" id="todayCommandTodo">Loading...</span>
+    </button>
+    <button type="button" class="today-command-btn" data-command-jump="#habits">
+      <span class="today-command-label">Habits Left</span>
+      <span class="today-command-value" id="todayCommandHabits">Loading...</span>
+    </button>
+    <button type="button" class="today-command-btn" data-command-jump="gym.html">
+      <span class="today-command-label">Training</span>
+      <span class="today-command-value">Open Run / Gym module</span>
+    </button>
+    <button type="button" class="today-command-btn" id="todayCommandSync">
+      <span class="today-command-label">Cloud</span>
+      <span class="today-command-value" id="todayCommandSyncText">Ready to sync</span>
+    </button>
+  </section>
+
   <div class="ticker-row">
     <div class="goal-ticker" id="goalTicker" aria-live="polite" aria-atomic="true">
       <div class="goal-ticker-led"><span class="goal-ticker-led-dot"></span></div>
@@ -1258,6 +1454,10 @@ body::after {
       <div class="goal-input-wrap gm-input-wrap habit-add-wrap">
         <input id="habitInput" class="gm-input" type="text" placeholder="Add a habit..." autocomplete="off">
         <button type="button" id="habitAddBtn" class="gm-add">+ Add</button>
+      </div>
+      <div class="habit-archive-panel" id="habitArchivePanel">
+        <div class="habit-archive-title">Archived habits</div>
+        <div class="habit-archive-list" id="habitArchiveList"></div>
       </div>
       <div class="habit-sync-row">
         <button type="button" class="habit-sync-btn" id="manualSyncBtn">Sync now</button>
@@ -1326,6 +1526,24 @@ body::after {
     </div>
   </div>
 
+</div>
+
+<div class="quick-capture" id="quickCapture">
+  <div class="quick-capture-panel" role="dialog" aria-label="Quick add">
+    <div class="quick-capture-title">Quick Add</div>
+    <div class="quick-capture-row">
+      <select id="quickCaptureType" aria-label="Quick add type">
+        <option value="todo">To-do</option>
+        <option value="habit">Habit</option>
+      </select>
+      <input id="quickCaptureText" type="text" placeholder="Type and hit Enter" autocomplete="off">
+    </div>
+    <div class="quick-capture-actions">
+      <button type="button" class="quick-capture-submit" id="quickCaptureSubmit">Add</button>
+      <button type="button" class="quick-capture-close" id="quickCaptureClose">Close</button>
+    </div>
+  </div>
+  <button type="button" class="quick-capture-fab" id="quickCaptureFab" aria-label="Quick add">+</button>
 </div>
 
 <script>
@@ -1416,10 +1634,12 @@ body::after {
     const state = raw && typeof raw === 'object' ? raw : {};
     const byId = {};
     const existing = Array.isArray(state.habits) ? state.habits : [];
+    const archivedHabits = Array.isArray(state.archivedHabits) ? state.archivedHabits.filter(h => h && h.id) : [];
+    const archivedIds = new Set(archivedHabits.map(h => h.id));
     const removedDefaults = Array.isArray(state.removedDefaults) ? state.removedDefaults : [];
-    existing.forEach(h => { if (h && h.id) byId[h.id] = h; });
+    existing.forEach(h => { if (h && h.id && !archivedIds.has(h.id)) byId[h.id] = h; });
     DEFAULT_HABITS.forEach(h => {
-      if (!byId[h.id] && removedDefaults.indexOf(h.id) === -1) byId[h.id] = Object.assign({}, h);
+      if (!byId[h.id] && !archivedIds.has(h.id) && removedDefaults.indexOf(h.id) === -1) byId[h.id] = Object.assign({}, h);
     });
     const ordered = DEFAULT_HABITS
       .map(h => byId[h.id])
@@ -1427,14 +1647,15 @@ body::after {
     return {
       habits: ordered.filter(Boolean),
       logs: state.logs && typeof state.logs === 'object' ? state.logs : {},
-      removedDefaults
+      removedDefaults,
+      archivedHabits
     };
   }
   function habitIdFromName(name, state) {
     const base = name.toLowerCase().replace(/[^a-z0-9]+/g, '-').replace(/^-|-$/g, '') || 'habit';
     let id = base;
     let n = 2;
-    const existing = new Set((state.habits || []).map(h => h.id));
+    const existing = new Set((state.habits || []).concat(state.archivedHabits || []).map(h => h.id));
     while (existing.has(id)) id = base + '-' + n++;
     return id;
   }
@@ -1468,14 +1689,29 @@ body::after {
     renderHabits();
     renderHabitMarket();
   }
-  function removeHabit(habitId) {
+  function archiveHabit(habitId) {
     const state = getHabitState();
+    const habit = state.habits.find(h => h.id === habitId);
+    if (!habit) return;
     state.habits = state.habits.filter(h => h.id !== habitId);
+    state.archivedHabits = (state.archivedHabits || []).filter(h => h.id !== habitId);
+    state.archivedHabits.push(Object.assign({}, habit, { archivedAt: new Date().toISOString() }));
     if (DEFAULT_HABITS.some(h => h.id === habitId) && state.removedDefaults.indexOf(habitId) === -1) {
       state.removedDefaults.push(habitId);
     }
-    if (state.logs[habitId]) delete state.logs[habitId];
     if (activeHabitGrid === habitId) activeHabitGrid = 'all';
+    setHabitState(state);
+    renderHabits();
+    renderHabitMarket();
+  }
+  function restoreHabit(habitId) {
+    const state = getHabitState();
+    const habit = (state.archivedHabits || []).find(h => h.id === habitId);
+    if (!habit) return;
+    state.archivedHabits = state.archivedHabits.filter(h => h.id !== habitId);
+    state.habits = (state.habits || []).filter(h => h.id !== habitId);
+    state.habits.push({ id: habit.id, name: habit.name, createdAt: habit.createdAt || new Date().toISOString() });
+    state.removedDefaults = (state.removedDefaults || []).filter(id => id !== habitId);
     setHabitState(state);
     renderHabits();
     renderHabitMarket();
@@ -1692,6 +1928,20 @@ body::after {
     if (hours >= SLEEP_HOUR) return 100;
     return Math.round((hours - WAKE_HOUR) / (SLEEP_HOUR - WAKE_HOUR) * 100);
   }
+  function renderTodayCommand(goals, habitState) {
+    const todoEl = document.getElementById('todayCommandTodo');
+    const habitEl = document.getElementById('todayCommandHabits');
+    if (todoEl) {
+      const next = goals.find(g => !g.done);
+      const done = goals.filter(g => g.done).length;
+      todoEl.textContent = next ? next.text : (goals.length ? 'All to-dos done (' + done + '/' + goals.length + ')' : 'Add the first to-do');
+    }
+    if (habitEl) {
+      const today = getActiveDateString();
+      const left = (habitState.habits || []).filter(h => !isHabitDone(habitState, h.id, today));
+      habitEl.textContent = left.length ? left.map(h => h.name).slice(0, 2).join(' / ') + (left.length > 2 ? ' +' + (left.length - 2) : '') : 'All habits complete';
+    }
+  }
   function renderDashboardOverview() {
     const goals = getGoals(todayKey());
     const goalDone = goals.filter(g => g.done).length;
@@ -1713,6 +1963,7 @@ body::after {
     document.getElementById('dashChartValue').textContent = habitDone + '/' + habitState.habits.length + ' today';
     renderDashboardChart(habitState);
     renderDashboardTodoChart();
+    renderTodayCommand(goals, habitState);
   }
   function bindHabitAdd() {
     const input = document.getElementById('habitInput');
@@ -1726,6 +1977,22 @@ body::after {
     btn.addEventListener('click', submit);
     input.addEventListener('keydown', (e) => {
       if (e.key === 'Enter') { e.preventDefault(); submit(); }
+    });
+  }
+  function renderArchivedHabits(state) {
+    const panel = document.getElementById('habitArchivePanel');
+    const list = document.getElementById('habitArchiveList');
+    if (!panel || !list) return;
+    const archived = state.archivedHabits || [];
+    panel.classList.toggle('has-items', archived.length > 0);
+    list.innerHTML = '';
+    archived.forEach(h => {
+      const row = document.createElement('div');
+      row.className = 'habit-archive-row';
+      row.innerHTML = '<span></span><button type="button" class="habit-restore">Restore</button>';
+      row.querySelector('span').textContent = h.name || 'Archived habit';
+      row.querySelector('button').addEventListener('click', () => restoreHabit(h.id));
+      list.appendChild(row);
     });
   }
   function renderHabits() {
@@ -1748,7 +2015,7 @@ body::after {
           '<span class="habit-name"></span>' +
           '<span class="habit-meta"></span>' +
         '</span>' +
-        '<button type="button" class="habit-delete" aria-label="Remove habit">×</button>';
+        '<button type="button" class="habit-delete" aria-label="Archive habit">×</button>';
       row.querySelector('.habit-name').textContent = h.name;
       row.querySelector('.habit-meta').innerHTML =
         '<span>' + habitStreak(state, h.id) + ' day streak</span>' +
@@ -1768,10 +2035,11 @@ body::after {
       });
       row.querySelector('.habit-delete').addEventListener('click', (e) => {
         e.stopPropagation();
-        removeHabit(h.id);
+        archiveHabit(h.id);
       });
       list.appendChild(row);
     });
+    renderArchivedHabits(state);
     renderHabitGrid(state);
     renderDashboardOverview();
   }
@@ -2207,29 +2475,107 @@ body::after {
   function bindManualSync() {
     const btn = document.getElementById('manualSyncBtn');
     const status = document.getElementById('manualSyncStatus');
-    if (!btn || !status) return;
-    btn.addEventListener('click', async () => {
+    const commandSync = document.getElementById('todayCommandSync');
+    const commandText = document.getElementById('todayCommandSyncText');
+    async function runSync() {
       if (typeof window.cloudSyncNow !== 'function') {
         status.textContent = 'Cloud sync is still loading.';
+        if (commandText) commandText.textContent = 'Cloud sync is loading';
         return;
       }
       btn.disabled = true;
+      if (commandSync) commandSync.disabled = true;
       status.textContent = 'Pushing phone changes...';
+      if (commandText) commandText.textContent = 'Syncing now...';
       try {
         const ok = await window.cloudSyncNow({ forcePush: true });
         status.textContent = ok ? 'Pushed to cloud just now.' : 'Cloud sync is still loading.';
+        if (commandText) commandText.textContent = ok ? 'Synced just now' : 'Cloud sync is loading';
       } catch (e) {
         status.textContent = 'Sync failed. Try again when online.';
+        if (commandText) commandText.textContent = 'Tap to retry sync';
       } finally {
         btn.disabled = false;
+        if (commandSync) commandSync.disabled = false;
       }
+    }
+    if (!btn || !status) return;
+    btn.addEventListener('click', async () => {
+      await runSync();
     });
+    if (commandSync) commandSync.addEventListener('click', runSync);
     window.addEventListener('cloud-sync-status', (e) => {
       const detail = e.detail || {};
       if (detail.appKey !== 'goals') return;
-      if (detail.state === 'pushed') status.textContent = 'Phone changes pushed.';
-      else if (detail.state === 'pulled') status.textContent = 'Latest cloud data loaded.';
-      else if (detail.state === 'error') status.textContent = detail.message || 'Sync needs a retry.';
+      if (detail.state === 'pushed') {
+        status.textContent = 'Phone changes pushed.';
+        if (commandText) commandText.textContent = 'Phone changes pushed';
+      } else if (detail.state === 'pulled') {
+        status.textContent = 'Latest cloud data loaded.';
+        if (commandText) commandText.textContent = 'Latest cloud data loaded';
+      } else if (detail.state === 'error') {
+        status.textContent = detail.message || 'Sync needs a retry.';
+        if (commandText) commandText.textContent = 'Sync needs a retry';
+      }
+    });
+  }
+  function bindTodayCommand() {
+    document.querySelectorAll('[data-command-jump]').forEach(btn => {
+      btn.addEventListener('click', () => {
+        const target = btn.getAttribute('data-command-jump') || '';
+        if (target.indexOf('.html') !== -1) {
+          window.location.href = target;
+          return;
+        }
+        const el = document.querySelector(target);
+        if (el) el.scrollIntoView({ behavior: 'smooth', block: 'start' });
+      });
+    });
+  }
+  function bindQuickCapture() {
+    const wrap = document.getElementById('quickCapture');
+    const fab = document.getElementById('quickCaptureFab');
+    const close = document.getElementById('quickCaptureClose');
+    const submit = document.getElementById('quickCaptureSubmit');
+    const type = document.getElementById('quickCaptureType');
+    const input = document.getElementById('quickCaptureText');
+    if (!wrap || !fab || !submit || !type || !input) return;
+    function open() {
+      wrap.classList.add('is-open');
+      setTimeout(() => input.focus(), 0);
+    }
+    function hide() {
+      wrap.classList.remove('is-open');
+    }
+    function add() {
+      const text = input.value.trim();
+      if (!text) { input.focus(); return; }
+      if (type.value === 'habit') {
+        addHabit(text);
+      } else {
+        const key = todayKey();
+        const list = getGoals(key);
+        list.push({ text, done: false, term: activeGoalTerm || 'short', createdAt: new Date().toISOString() });
+        setGoals(key, list);
+        loadToday();
+      }
+      input.value = '';
+      renderDashboardOverview();
+      input.focus();
+    }
+    fab.addEventListener('click', () => {
+      if (wrap.classList.contains('is-open')) hide();
+      else open();
+    });
+    if (close) close.addEventListener('click', hide);
+    submit.addEventListener('click', add);
+    input.addEventListener('keydown', e => {
+      if (e.key === 'Enter') { e.preventDefault(); add(); }
+      if (e.key === 'Escape') hide();
+    });
+    document.addEventListener('click', e => {
+      if (!wrap.classList.contains('is-open')) return;
+      if (!wrap.contains(e.target)) hide();
     });
   }
   // ---------- Add + Polish handlers ----------
@@ -2324,6 +2670,8 @@ body::after {
   bindHabitAdd();
   bindGoalFilters();
   bindManualSync();
+  bindTodayCommand();
+  bindQuickCapture();
   updateDayRing();
   renderDashboardOverview();
   setInterval(() => {

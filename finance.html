@@ -1149,6 +1149,29 @@ html, body { scrollbar-width: none; -ms-overflow-style: none; }
 }
 .cash-summary-value.income { color: #6BE3A4; }
 .cash-summary-value.expense { color: #FF8A8A; }
+.cash-insight-grid {
+  display: grid;
+  grid-template-columns: repeat(3, minmax(0, 1fr));
+  gap: 8px;
+  margin-top: 8px;
+}
+.cash-insight {
+  padding: 10px 12px;
+  border-radius: 12px;
+  background: rgba(0,0,0,0.16);
+  border: 1px solid rgba(255,255,255,0.05);
+}
+.cash-insight-label {
+  font-size: 9px; font-weight: 800; letter-spacing: 0.12em;
+  text-transform: uppercase; color: var(--text-tertiary);
+  font-family: var(--font-mono);
+}
+.cash-insight-value {
+  margin-top: 6px;
+  font-size: 12px; font-weight: 750;
+  color: var(--text-secondary);
+  line-height: 1.35;
+}
 .cash-add-card {
   background: rgba(255,255,255,0.025) !important;
   border: 1px solid rgba(255,255,255,0.05) !important;
@@ -1580,9 +1603,11 @@ html, body { scrollbar-width: none; -ms-overflow-style: none; }
   .cash-month-label input {
     width: 100%;
   }
-  .cash-summary-grid {
+  .cash-summary-grid,
+  .cash-insight-grid {
     grid-template-columns: 1fr;
   }
+  .cash-insight-value { font-size: 13px; }
   .cash-add-row {
     flex-direction: column;
     align-items: stretch;
@@ -2031,6 +2056,20 @@ input[type="date"]::-webkit-calendar-picker-indicator {
       <div class="cash-summary-box">
         <div class="cash-summary-label">Saved</div>
         <div class="cash-summary-value" id="cashSavedRate">0%</div>
+      </div>
+    </div>
+    <div class="cash-insight-grid">
+      <div class="cash-insight">
+        <div class="cash-insight-label">Vs Last Month</div>
+        <div class="cash-insight-value" id="cashVsLast">No comparison yet</div>
+      </div>
+      <div class="cash-insight">
+        <div class="cash-insight-label">Daily Burn</div>
+        <div class="cash-insight-value" id="cashDailyBurn">HKD 0 / day</div>
+      </div>
+      <div class="cash-insight">
+        <div class="cash-insight-label">Biggest Expense</div>
+        <div class="cash-insight-value" id="cashBiggest">None yet</div>
       </div>
     </div>
   </div>
@@ -3014,6 +3053,21 @@ input[type="date"]::-webkit-calendar-picker-indicator {
   function cashMonthKey(dateStr) {
     return String(dateStr || cashToday()).slice(0, 7);
   }
+  function cashPrevMonthKey(monthKey) {
+    const parts = String(monthKey || cashMonthKey(cashToday())).split('-');
+    const d = new Date(Number(parts[0]) || new Date().getFullYear(), (Number(parts[1]) || 1) - 2, 1);
+    return d.getFullYear() + '-' + String(d.getMonth() + 1).padStart(2, '0');
+  }
+  function cashDaysInMonth(monthKey) {
+    const parts = String(monthKey || cashMonthKey(cashToday())).split('-');
+    const year = Number(parts[0]) || new Date().getFullYear();
+    const month = Number(parts[1]) || 1;
+    return new Date(year, month, 0).getDate();
+  }
+  function cashElapsedDays(monthKey) {
+    if (monthKey !== cashMonthKey(cashToday())) return cashDaysInMonth(monthKey);
+    return new Date().getDate();
+  }
   function cashCurrentMonth() {
     const el = document.getElementById('cashMonth');
     return (el && el.value) ? el.value : cashMonthKey(cashToday());
@@ -3039,6 +3093,9 @@ input[type="date"]::-webkit-calendar-picker-indicator {
     const expenseEl = document.getElementById('cashExpense');
     const netEl = document.getElementById('cashNet');
     const savedEl = document.getElementById('cashSavedRate');
+    const vsLastEl = document.getElementById('cashVsLast');
+    const dailyBurnEl = document.getElementById('cashDailyBurn');
+    const biggestEl = document.getElementById('cashBiggest');
     if (!listEl) return;
     if (monthEl && !monthEl.value) monthEl.value = cashMonthKey(cashToday());
     const month = cashCurrentMonth();
@@ -3049,6 +3106,15 @@ input[type="date"]::-webkit-calendar-picker-indicator {
     const income = entries.filter(e => e.type === 'income').reduce((s, e) => s + (Number(e.amount) || 0), 0);
     const expense = entries.filter(e => e.type !== 'income').reduce((s, e) => s + (Number(e.amount) || 0), 0);
     const net = income - expense;
+    const prevMonth = cashPrevMonthKey(month);
+    const prevEntries = all.filter(e => cashMonthKey(e.date) === prevMonth);
+    const prevExpense = prevEntries.filter(e => e.type !== 'income').reduce((s, e) => s + (Number(e.amount) || 0), 0);
+    const expenseGroups = {};
+    entries.filter(e => e.type !== 'income').forEach(e => {
+      const name = e.name || 'Expense';
+      expenseGroups[name] = (expenseGroups[name] || 0) + (Number(e.amount) || 0);
+    });
+    const biggest = Object.keys(expenseGroups).sort((a, b) => expenseGroups[b] - expenseGroups[a])[0];
     if (incomeEl) incomeEl.textContent = fmtMoney(income);
     if (expenseEl) expenseEl.textContent = fmtMoney(expense);
     if (netEl) {
@@ -3057,6 +3123,17 @@ input[type="date"]::-webkit-calendar-picker-indicator {
       netEl.classList.toggle('negative', net < 0);
     }
     if (savedEl) savedEl.textContent = income > 0 ? Math.round((net / income) * 100) + '%' : '0%';
+    if (vsLastEl) {
+      if (prevExpense <= 0 && expense <= 0) vsLastEl.textContent = 'No spending yet';
+      else if (prevExpense <= 0) vsLastEl.textContent = 'New spending: ' + fmtMoney(expense);
+      else {
+        const diff = expense - prevExpense;
+        const pct = Math.round(Math.abs(diff) / prevExpense * 100);
+        vsLastEl.textContent = (diff <= 0 ? pct + '% lower' : pct + '% higher') + ' than last month';
+      }
+    }
+    if (dailyBurnEl) dailyBurnEl.textContent = fmtMoney(expense / Math.max(1, cashElapsedDays(month))) + ' / day';
+    if (biggestEl) biggestEl.textContent = biggest ? biggest + ' · ' + fmtMoney(expenseGroups[biggest]) : 'None yet';
     if (countEl) countEl.textContent = entries.length + (entries.length === 1 ? ' entry' : ' entries');
     listEl.innerHTML = '';
     if (!entries.length) {
