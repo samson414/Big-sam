@@ -787,7 +787,6 @@ html, body { scrollbar-width: none; -ms-overflow-style: none; }
 .ord-card:hover { background: rgba(255,255,255,0.045); }
 .ord-card.cat-bank   { border-left-color: #7DD3FC; }
 .ord-card.cat-stocks { border-left-color: #6EE7B7; }
-.ord-card.cat-crypto { border-left-color: #FBBF24; }
 .ord-card.cat-other  { border-left-color: #B794F4; }
 .ord-card-h {
   display: grid; grid-template-columns: 1fr auto auto;
@@ -1074,6 +1073,173 @@ html, body { scrollbar-width: none; -ms-overflow-style: none; }
 .wish-row-bar-fill.warn { background: #F2C063; box-shadow: 0 0 6px rgba(242,192,99,0.5); }
 .wish-row-bar-fill.bad  { background: #FF8A8A; box-shadow: 0 0 6px rgba(255,138,138,0.5); }
 .wish-row-bar-fill.flat { background: rgba(255,255,255,0.20); }
+
+/* ============================================================
+   MONTHLY CASHFLOW — income / expense tracker
+   ============================================================ */
+.cash-hero {
+  background: linear-gradient(135deg, rgba(107,227,164,0.08), rgba(125,211,252,0.05)) !important;
+  border: 1px solid rgba(107,227,164,0.16) !important;
+}
+.cash-top {
+  display: flex; justify-content: space-between; align-items: flex-start;
+  gap: 14px; margin-bottom: 14px;
+}
+.cash-eyebrow,
+.cash-add-eyebrow,
+.cash-section-label {
+  font-size: 10px; letter-spacing: 0.18em; font-weight: 800;
+  text-transform: uppercase; color: var(--text-tertiary);
+  font-family: var(--font-mono);
+}
+.cash-net {
+  margin-top: 6px;
+  font-size: 34px; font-weight: 700;
+  letter-spacing: -0.025em;
+  color: var(--text-primary);
+  font-variant-numeric: tabular-nums;
+}
+.cash-net.positive { color: #6BE3A4; }
+.cash-net.negative { color: #FF8A8A; }
+.cash-month-label {
+  display: flex; flex-direction: column; gap: 6px;
+  color: var(--text-tertiary);
+  font-family: var(--font-mono);
+  font-size: 10px; font-weight: 800;
+  letter-spacing: 0.12em; text-transform: uppercase;
+}
+.cash-month-label input {
+  color: var(--text-primary);
+  background: rgba(0,0,0,0.28);
+  border: 1px solid rgba(255,255,255,0.08);
+  border-radius: 9px;
+  padding: 8px 10px;
+  font-family: inherit;
+}
+.cash-summary-grid {
+  display: grid;
+  grid-template-columns: repeat(3, minmax(0, 1fr));
+  gap: 8px;
+}
+.cash-summary-box {
+  padding: 12px;
+  border-radius: 12px;
+  background: rgba(0,0,0,0.20);
+  border: 1px solid rgba(255,255,255,0.055);
+}
+.cash-summary-label {
+  font-size: 9px; font-weight: 800; letter-spacing: 0.12em;
+  text-transform: uppercase; color: var(--text-tertiary);
+  font-family: var(--font-mono);
+}
+.cash-summary-value {
+  margin-top: 7px;
+  color: var(--text-primary);
+  font-size: 18px; font-weight: 800;
+  font-family: var(--font-mono);
+  font-variant-numeric: tabular-nums;
+}
+.cash-summary-value.income { color: #6BE3A4; }
+.cash-summary-value.expense { color: #FF8A8A; }
+.cash-add-card {
+  background: rgba(255,255,255,0.025) !important;
+  border: 1px solid rgba(255,255,255,0.05) !important;
+}
+.cash-add-eyebrow { margin-bottom: 10px; }
+.cash-add-row {
+  display: flex; gap: 6px; align-items: stretch; flex-wrap: wrap;
+  padding: 4px;
+  background: rgba(0,0,0,0.30);
+  border-radius: 12px;
+}
+.cash-input {
+  background: transparent; border: none; outline: none;
+  color: var(--text-primary);
+  font-family: inherit; font-size: 14px;
+  padding: 9px 12px;
+}
+.cash-input::placeholder { color: var(--text-tertiary); }
+.cash-type, .cash-currency {
+  flex: 0 1 96px;
+  background: rgba(255,255,255,0.04);
+  border-radius: 9px;
+  color: var(--text-primary);
+  font-size: 12px; font-weight: 700;
+  appearance: none; -webkit-appearance: none;
+  text-align: center;
+}
+.cash-name { flex: 2; min-width: 150px; }
+.cash-amount { flex: 1; min-width: 82px; max-width: 120px; text-align: right; font-variant-numeric: tabular-nums; }
+.cash-date {
+  flex: 0 1 132px;
+  background: rgba(255,255,255,0.04);
+  border-radius: 9px;
+  color: var(--text-primary);
+  font-size: 12px;
+}
+.cash-add-btn {
+  padding: 0 18px;
+  background: linear-gradient(180deg, #6BE3A4, #45B982);
+  color: #04140F; border: none;
+  border-radius: 9px;
+  font-family: inherit; font-size: 14px; font-weight: 800;
+  cursor: pointer;
+  white-space: nowrap;
+  box-shadow: 0 4px 14px rgba(107,227,164,0.24);
+}
+.cash-section-h {
+  display: flex; justify-content: space-between; align-items: baseline;
+  margin: 18px 4px 8px;
+}
+.cash-section-count {
+  font-size: 11px; color: var(--text-tertiary);
+  font-family: var(--font-mono);
+}
+.cash-empty-card {
+  text-align: center; padding: 32px 20px;
+  background: rgba(255,255,255,0.025);
+  border-radius: 14px;
+  border: 1px dashed rgba(255,255,255,0.08);
+}
+.cash-empty-card.hidden { display: none; }
+.cash-empty-icon { font-size: 36px; margin-bottom: 8px; opacity: 0.65; }
+.cash-empty-title { font-size: 15px; font-weight: 700; color: var(--text-primary); margin-bottom: 4px; }
+.cash-empty-sub { font-size: 12px; color: var(--text-tertiary); line-height: 1.5; max-width: 340px; margin: 0 auto; }
+.cash-row {
+  display: grid; grid-template-columns: auto 1fr auto auto;
+  gap: 12px; align-items: center;
+  padding: 12px 14px;
+  margin-bottom: 8px;
+  border-radius: 12px;
+  background: rgba(255,255,255,0.025);
+}
+.cash-row-type {
+  width: 8px; height: 34px; border-radius: 999px;
+  background: #FF8A8A;
+}
+.cash-row.income .cash-row-type { background: #6BE3A4; }
+.cash-row-name { color: var(--text-primary); font-size: 14px; font-weight: 650; }
+.cash-row-meta {
+  margin-top: 2px;
+  color: var(--text-tertiary);
+  font-size: 11px;
+  font-family: var(--font-mono);
+}
+.cash-row-amt {
+  color: #FF8A8A;
+  font-family: var(--font-mono);
+  font-weight: 800;
+  font-variant-numeric: tabular-nums;
+}
+.cash-row.income .cash-row-amt { color: #6BE3A4; }
+.cash-row-x {
+  background: transparent; border: 1px solid rgba(255,255,255,0.10);
+  color: var(--text-tertiary);
+  cursor: pointer; font-size: 14px;
+  padding: 4px 8px; border-radius: 6px;
+  font-family: inherit; line-height: 1;
+}
+.cash-row-x:hover { color: #FF8A8A; }
 
 /* ============================================================
    FINANCE TICKER — rotating Nasdaq-style subscription renewal
@@ -1398,8 +1564,41 @@ html, body { scrollbar-width: none; -ms-overflow-style: none; }
   .wish-add-row .wish-input-amt { text-align: right; }
   .wish-add-row .wish-input-ccy { text-align: center; }
 
+  /* ---------- Cashflow add row ---------- */
+  .cash-top {
+    flex-direction: column;
+  }
+  .cash-month-label,
+  .cash-month-label input {
+    width: 100%;
+  }
+  .cash-summary-grid {
+    grid-template-columns: 1fr;
+  }
+  .cash-add-row {
+    flex-direction: column;
+    align-items: stretch;
+    padding: 8px;
+    gap: 8px;
+  }
+  .cash-add-row .cash-input,
+  .cash-add-row .cash-add-btn {
+    flex: none !important;
+    max-width: none !important;
+    min-width: 0 !important;
+    width: 100%;
+    padding: 12px 14px !important;
+    font-size: 15px !important;
+  }
+  .cash-add-row .cash-amount { text-align: right; }
+  .cash-add-row .cash-type,
+  .cash-add-row .cash-currency { text-align: center; }
+  .cash-row {
+    grid-template-columns: auto 1fr auto;
+  }
+
   /* ---------- Bigger close (×) and edit buttons in rows ---------- */
-  .ord-card-x, .wish-row-x {
+  .ord-card-x, .wish-row-x, .cash-row-x {
     padding: 8px 12px !important;
     font-size: 16px !important;
   }
@@ -1702,16 +1901,6 @@ input[type="date"]::-webkit-calendar-picker-indicator {
           <button class="quick-add-btn" id="stocksAddBtn">+</button>
         </div>
       </div>
-      <!-- Crypto -->
-      <div class="card nw-subcard">
-        <div class="label" style="display:flex;justify-content:space-between;align-items:center"><span>🪙 Crypto</span><span id="cryptoTotal" style="font-size:13px;color:var(--text-primary);font-weight:600">0</span></div>
-        <div id="cryptoList" class="nw-list"></div>
-        <div class="quick-add">
-          <input type="text" placeholder="Coin / wallet" id="cryptoName" />
-          <input type="number" placeholder="Value" id="cryptoAmount" step="0.01" />
-          <button class="quick-add-btn" id="cryptoAddBtn">+</button>
-        </div>
-      </div>
       <!-- Other assets -->
       <div class="card nw-subcard">
         <div class="label" style="display:flex;justify-content:space-between;align-items:center"><span>💼 Other assets</span><span id="otherTotal" style="font-size:13px;color:var(--text-primary);font-weight:600">0</span></div>
@@ -1806,6 +1995,66 @@ input[type="date"]::-webkit-calendar-picker-indicator {
   </div>
 </div>
 
+<!-- ===== MONTHLY CASHFLOW ===== -->
+<div class="section" data-section="cash">
+  <div class="section-title">
+    <span class="section-title-text">INCOME / EXPENSES</span>
+  </div>
+  <div class="card cash-hero">
+    <div class="cash-top">
+      <div>
+        <div class="cash-eyebrow">MONTHLY TRACKER</div>
+        <div class="cash-net" id="cashNet">HKD 0</div>
+      </div>
+      <label class="cash-month-label">
+        <span>Month</span>
+        <input type="month" id="cashMonth">
+      </label>
+    </div>
+    <div class="cash-summary-grid">
+      <div class="cash-summary-box">
+        <div class="cash-summary-label">Income</div>
+        <div class="cash-summary-value income" id="cashIncome">HKD 0</div>
+      </div>
+      <div class="cash-summary-box">
+        <div class="cash-summary-label">Expenses</div>
+        <div class="cash-summary-value expense" id="cashExpense">HKD 0</div>
+      </div>
+      <div class="cash-summary-box">
+        <div class="cash-summary-label">Saved</div>
+        <div class="cash-summary-value" id="cashSavedRate">0%</div>
+      </div>
+    </div>
+  </div>
+  <div class="card cash-add-card">
+    <div class="cash-add-eyebrow">+ ADD ENTRY</div>
+    <div class="cash-add-row">
+      <select id="cashType" class="cash-input cash-type">
+        <option value="expense">Expense</option>
+        <option value="income">Income</option>
+      </select>
+      <input type="text" id="cashName" class="cash-input cash-name" placeholder="Name (salary, food, transport)">
+      <input type="number" id="cashAmount" class="cash-input cash-amount" placeholder="Amount" step="0.01">
+      <select id="cashCurrency" class="cash-input cash-currency">
+        <option value="HKD">HKD</option>
+        <option value="USD">USD</option>
+      </select>
+      <input type="date" id="cashDate" class="cash-input cash-date">
+      <button type="button" id="cashAddBtn" class="cash-add-btn">+ Add</button>
+    </div>
+  </div>
+  <div class="cash-section-h">
+    <span class="cash-section-label">THIS MONTH</span>
+    <span class="cash-section-count" id="cashCount">0 entries</span>
+  </div>
+  <div id="cashList"></div>
+  <div class="cash-empty-card" id="cashEmpty">
+    <div class="cash-empty-icon">💸</div>
+    <div class="cash-empty-title">No entries yet</div>
+    <div class="cash-empty-sub">Add income or expenses above. The monthly summary will track income, spending, and savings rate.</div>
+  </div>
+</div>
+
 <!-- ===== WISHLIST ===== -->
 <div class="section" data-section="wish">
   <div class="section-title">
@@ -1864,6 +2113,10 @@ input[type="date"]::-webkit-calendar-picker-indicator {
     <span class="bot-tab-icon">📊</span>
     <span class="bot-tab-label">Net Worth</span>
   </button>
+  <button class="bot-tab" data-tab="cash">
+    <span class="bot-tab-icon">💸</span>
+    <span class="bot-tab-label">Cashflow</span>
+  </button>
   <button class="bot-tab" data-tab="wish">
     <span class="bot-tab-icon">🎯</span>
     <span class="bot-tab-label">Wishlist</span>
@@ -1895,7 +2148,6 @@ input[type="date"]::-webkit-calendar-picker-indicator {
   const ORD_FROM_META = {
     bank:   { name: 'Bank',   color: '#7DD3FC' },
     stocks: { name: 'Stocks', color: '#6EE7B7' },
-    crypto: { name: 'Crypto', color: '#FBBF24' },
     other:  { name: 'Other',  color: '#B794F4' }
   };
 
@@ -1917,7 +2169,7 @@ input[type="date"]::-webkit-calendar-picker-indicator {
   }
   tabs.forEach(b => b.addEventListener('click', () => setActiveTab(b.dataset.tab)));
   const savedTab = storeGet(TAB_KEY);
-  setActiveTab(savedTab && ['net','wish'].includes(savedTab) ? savedTab : 'net');
+  setActiveTab(savedTab && ['net','cash','wish'].includes(savedTab) ? savedTab : 'net');
 
   // ============================================================
   // NET WORTH (copied from the main dashboard, verbatim logic)
@@ -1926,7 +2178,6 @@ input[type="date"]::-webkit-calendar-picker-indicator {
   const NW_CATS = [
     { key: 'bank',   listId: 'bankList',   totalId: 'bankTotal',   nameId: 'bankName',   amtId: 'bankAmount',   addId: 'bankAddBtn' },
     { key: 'stocks', listId: 'stocksList', totalId: 'stocksTotal', nameId: 'stocksName', amtId: 'stocksAmount', addId: 'stocksAddBtn' },
-    { key: 'crypto', listId: 'cryptoList', totalId: 'cryptoTotal', nameId: 'cryptoName', amtId: 'cryptoAmount', addId: 'cryptoAddBtn' },
     { key: 'other',  listId: 'otherList',  totalId: 'otherTotal',  nameId: 'otherName',  amtId: 'otherAmount',  addId: 'otherAddBtn' }
   ];
   const currencyEl = document.getElementById('netWorthCurrency');
@@ -2079,6 +2330,7 @@ input[type="date"]::-webkit-calendar-picker-indicator {
     renderNetWorthChart();
     renderAllocationDonut(sliceTotals, grand);
     renderActivity();
+    if (typeof renderCashflow === 'function') renderCashflow();
     if (typeof renderWishlist === 'function') renderWishlist();
   }
 
@@ -2112,7 +2364,7 @@ input[type="date"]::-webkit-calendar-picker-indicator {
     const empty = document.getElementById('nwActivityEmpty');
     const count = document.getElementById('nwActivityCount');
     if (!list) return;
-    const arr = (storeGet(ACTIVITY_KEY) || []).slice().sort((a, b) => b.ts - a.ts);
+    const arr = (storeGet(ACTIVITY_KEY) || []).filter(e => e.cat !== 'crypto').sort((a, b) => b.ts - a.ts);
     if (!arr.length) {
       list.classList.add('hidden');
       empty.classList.remove('hidden');
@@ -2141,14 +2393,12 @@ input[type="date"]::-webkit-calendar-picker-indicator {
   }
 
   // ============================================================
-  // ALLOCATION DONUT — pie chart of where money lives + annual subs
-  // burn (so you can see how much subs are eating vs your assets).
-  // Each NW category gets a fixed color; subs get red because outflow.
+  // ALLOCATION DONUT — pie chart of where money lives.
+  // Each active NW category gets a fixed color.
   // ============================================================
   const NW_SLICE_META = {
     bank:   { name: 'Bank',     color: '#7DD3FC' },
     stocks: { name: 'Stocks',   color: '#6EE7B7' },
-    crypto: { name: 'Crypto',   color: '#FBBF24' },
     other:  { name: 'Other',    color: '#B794F4' },
   };
   function donutArcPath(cx, cy, rOuter, rInner, startAngle, endAngle) {
@@ -2556,7 +2806,7 @@ input[type="date"]::-webkit-calendar-picker-indicator {
     if (!sel) return;
     const prev = sel.value;
     const accounts = (typeof listAllNwAccounts === 'function') ? listAllNwAccounts() : [];
-    const ICONS = { bank: '🏦', stocks: '📈', crypto: '🪙', other: '💼' };
+    const ICONS = { bank: '🏦', stocks: '📈', other: '💼' };
     if (!accounts.length) {
       sel.innerHTML = '<option value="">No accounts yet</option>';
       sel.disabled = true;
@@ -2634,7 +2884,7 @@ input[type="date"]::-webkit-calendar-picker-indicator {
     ).join('');
     // Build From-account options from the live NW accounts
     const accounts = (typeof listAllNwAccounts === 'function') ? listAllNwAccounts() : [];
-    const ICONS = { bank: '🏦', stocks: '📈', crypto: '🪙', other: '💼' };
+    const ICONS = { bank: '🏦', stocks: '📈', other: '💼' };
     const currentFrom = (it.fromCat && it.fromAccount) ? (it.fromCat + '::' + it.fromAccount) : '';
     const fromOpts = '<option value="">No account linked</option>' + accounts.map(a => {
       const v = a.catKey + '::' + a.itemName;
@@ -2741,6 +2991,139 @@ input[type="date"]::-webkit-calendar-picker-indicator {
   // Enter key on the inputs still triggers add directly.
   if (subName)   subName.addEventListener('keydown', (e) => { if (e.key === 'Enter') doSubAdd(); });
   if (subAmount) subAmount.addEventListener('keydown', (e) => { if (e.key === 'Enter') doSubAdd(); });
+
+  // ============================================================
+  // MONTHLY CASHFLOW — income / expenses by month.
+  // Stored as CHF-base amounts under 'finance_cashflow_v1'.
+  // ============================================================
+  const CASHFLOW_KEY = 'finance_cashflow_v1';
+  function cashToday() {
+    const d = new Date();
+    const m = String(d.getMonth() + 1).padStart(2, '0');
+    const day = String(d.getDate()).padStart(2, '0');
+    return d.getFullYear() + '-' + m + '-' + day;
+  }
+  function cashMonthKey(dateStr) {
+    return String(dateStr || cashToday()).slice(0, 7);
+  }
+  function cashCurrentMonth() {
+    const el = document.getElementById('cashMonth');
+    return (el && el.value) ? el.value : cashMonthKey(cashToday());
+  }
+  function cashFmtDate(dateStr) {
+    const d = new Date(String(dateStr || cashToday()) + 'T00:00');
+    if (isNaN(d)) return dateStr || '';
+    return d.toLocaleDateString('en-US', { month: 'short', day: 'numeric' });
+  }
+  function getCashEntries() {
+    const arr = storeGet(CASHFLOW_KEY);
+    return Array.isArray(arr) ? arr : [];
+  }
+  function setCashEntries(arr) {
+    storeSet(CASHFLOW_KEY, arr);
+  }
+  function renderCashflow() {
+    const monthEl = document.getElementById('cashMonth');
+    const listEl = document.getElementById('cashList');
+    const emptyEl = document.getElementById('cashEmpty');
+    const countEl = document.getElementById('cashCount');
+    const incomeEl = document.getElementById('cashIncome');
+    const expenseEl = document.getElementById('cashExpense');
+    const netEl = document.getElementById('cashNet');
+    const savedEl = document.getElementById('cashSavedRate');
+    if (!listEl) return;
+    if (monthEl && !monthEl.value) monthEl.value = cashMonthKey(cashToday());
+    const month = cashCurrentMonth();
+    const all = getCashEntries();
+    const entries = all
+      .filter(e => cashMonthKey(e.date) === month)
+      .sort((a, b) => String(b.date || '').localeCompare(String(a.date || '')) || ((b.ts || 0) - (a.ts || 0)));
+    const income = entries.filter(e => e.type === 'income').reduce((s, e) => s + (Number(e.amount) || 0), 0);
+    const expense = entries.filter(e => e.type !== 'income').reduce((s, e) => s + (Number(e.amount) || 0), 0);
+    const net = income - expense;
+    if (incomeEl) incomeEl.textContent = fmtMoney(income);
+    if (expenseEl) expenseEl.textContent = fmtMoney(expense);
+    if (netEl) {
+      netEl.textContent = (net < 0 ? '-' : '') + fmtMoney(Math.abs(net));
+      netEl.classList.toggle('positive', net > 0);
+      netEl.classList.toggle('negative', net < 0);
+    }
+    if (savedEl) savedEl.textContent = income > 0 ? Math.round((net / income) * 100) + '%' : '0%';
+    if (countEl) countEl.textContent = entries.length + (entries.length === 1 ? ' entry' : ' entries');
+    listEl.innerHTML = '';
+    if (!entries.length) {
+      if (emptyEl) emptyEl.classList.remove('hidden');
+      return;
+    }
+    if (emptyEl) emptyEl.classList.add('hidden');
+    entries.forEach(entry => {
+      const row = document.createElement('div');
+      row.className = 'cash-row ' + (entry.type === 'income' ? 'income' : 'expense');
+      const sign = entry.type === 'income' ? '+' : '-';
+      row.innerHTML =
+        '<span class="cash-row-type"></span>' +
+        '<span>' +
+          '<div class="cash-row-name"></div>' +
+          '<div class="cash-row-meta"></div>' +
+        '</span>' +
+        '<span class="cash-row-amt"></span>' +
+        '<button type="button" class="cash-row-x" aria-label="Remove">×</button>';
+      row.querySelector('.cash-row-name').textContent = entry.name || (entry.type === 'income' ? 'Income' : 'Expense');
+      row.querySelector('.cash-row-meta').textContent = cashFmtDate(entry.date) + ' · ' + (entry.type === 'income' ? 'income' : 'expense');
+      row.querySelector('.cash-row-amt').textContent = sign + fmtMoney(Number(entry.amount) || 0);
+      row.querySelector('.cash-row-x').addEventListener('click', () => {
+        setCashEntries(getCashEntries().filter(e => e.id !== entry.id));
+        renderCashflow();
+      });
+      listEl.appendChild(row);
+    });
+  }
+  function addCashEntry() {
+    const typeEl = document.getElementById('cashType');
+    const nameEl = document.getElementById('cashName');
+    const amountEl = document.getElementById('cashAmount');
+    const currencyElLocal = document.getElementById('cashCurrency');
+    const dateEl = document.getElementById('cashDate');
+    if (!nameEl || !amountEl) return;
+    const name = (nameEl.value || '').trim();
+    const raw = parseFloat(amountEl.value);
+    if (!name || isNaN(raw)) { nameEl.focus(); return; }
+    const ccy = normalizeCurrency(currencyElLocal ? currencyElLocal.value : null);
+    const rate = exchangeRates[ccy] || 1;
+    const date = (dateEl && dateEl.value) ? dateEl.value : cashToday();
+    const entries = getCashEntries();
+    entries.push({
+      id: 'cf_' + Date.now() + '_' + Math.random().toString(36).slice(2, 8),
+      type: typeEl && typeEl.value === 'income' ? 'income' : 'expense',
+      name,
+      amount: Math.abs(raw) / rate,
+      entered_amount: Math.abs(raw),
+      entered_currency: ccy,
+      date,
+      ts: Date.now()
+    });
+    setCashEntries(entries);
+    nameEl.value = '';
+    amountEl.value = '';
+    renderCashflow();
+  }
+  const cashMonthEl = document.getElementById('cashMonth');
+  const cashDateEl = document.getElementById('cashDate');
+  const cashAddBtn = document.getElementById('cashAddBtn');
+  const cashNameEl = document.getElementById('cashName');
+  const cashAmountEl = document.getElementById('cashAmount');
+  if (cashMonthEl) cashMonthEl.value = cashMonthKey(cashToday());
+  if (cashDateEl) cashDateEl.value = cashToday();
+  if (cashMonthEl) cashMonthEl.addEventListener('change', renderCashflow);
+  if (cashAddBtn) cashAddBtn.addEventListener('click', addCashEntry);
+  if (cashNameEl) cashNameEl.addEventListener('keydown', e => { if (e.key === 'Enter') addCashEntry(); });
+  if (cashAmountEl) cashAmountEl.addEventListener('keydown', e => { if (e.key === 'Enter') addCashEntry(); });
+  window.addEventListener('storage', () => {
+    renderAllNetWorth();
+    renderCashflow();
+  });
+  renderCashflow();
+
   // ============================================================
   // WISHLIST — items with % of net worth.
   // Each item is { name, amountCHF, ts, ccy }. Stored in 'wishlist'.
@@ -2937,7 +3320,7 @@ input[type="date"]::-webkit-calendar-picker-indicator {
     if (!sel) return;
     const accounts = listAllNwAccounts();
     const prev = sel.value;
-    const ICONS = { bank: '🏦', stocks: '📈', crypto: '🪙', other: '💼' };
+    const ICONS = { bank: '🏦', stocks: '📈', other: '💼' };
     if (!accounts.length) {
       sel.innerHTML = '<option value="">No accounts yet</option>';
       sel.disabled = true;
@@ -3055,7 +3438,7 @@ input[type="date"]::-webkit-calendar-picker-indicator {
       alert('Add at least one net worth account before deducting.');
       return;
     }
-    const ICONS = { bank: '🏦', stocks: '📈', crypto: '🪙', other: '💼' };
+    const ICONS = { bank: '🏦', stocks: '📈', other: '💼' };
     const cost = Number(order.amount) || 0;
     const optsHtml = accounts.map(a => {
       const insufficient = a.amountCHF < cost - 0.005;
@@ -3353,7 +3736,7 @@ document.addEventListener('DOMContentLoaded', function () {
   if (typeof initCloudSync !== 'function') return;
   initCloudSync({
     appKey: 'finance',
-    syncedKeys: ['subs', 'wishlist', 'incoming_orders', 'nw_currency', 'nw:activity', 'nw:history'],
+    syncedKeys: ['subs', 'wishlist', 'incoming_orders', 'finance_cashflow_v1', 'nw_currency', 'nw:activity', 'nw:history'],
     syncedPrefixes: ['nw:'],
     onApplied: function () { window.dispatchEvent(new Event('storage')); }
   });
