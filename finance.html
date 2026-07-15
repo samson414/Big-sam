@@ -49,6 +49,20 @@ html, body {
   -webkit-font-smoothing: antialiased;
   min-height: 100%;
 }
+html { scroll-behavior: smooth; }
+@keyframes page-enter {
+  from { opacity: 0; transform: translateY(8px); }
+  to { opacity: 1; transform: translateY(0); }
+}
+@keyframes section-enter {
+  from { opacity: 0; transform: translateY(8px); }
+  to { opacity: 1; transform: translateY(0); }
+}
+@media (prefers-reduced-motion: reduce) {
+  html { scroll-behavior: auto; }
+  .shell,
+  .section[data-section] { animation: none; }
+}
 
 /* Backdrop — black with subtle warm + cool washes */
 body::before {
@@ -78,6 +92,7 @@ body::after {
   max-width: 880px;
   margin: 0 auto;
   padding: max(24px, env(safe-area-inset-top)) max(16px, env(safe-area-inset-right)) calc(100px + env(safe-area-inset-bottom)) max(16px, env(safe-area-inset-left));   /* extra bottom padding so tab bar doesn't cover content */
+  animation: page-enter 0.24s ease both;
 }
 
 /* ===== Back to dashboard ===== */
@@ -154,6 +169,7 @@ body::after {
 
 /* Sections: hide non-active when bottom tabs are in use */
 .section[hidden] { display: none !important; }
+.section[data-section] { animation: section-enter 0.22s ease both; }
 
 /* Hide scrollbars everywhere */
 html, body { scrollbar-width: none; -ms-overflow-style: none; }

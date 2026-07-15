@@ -37,11 +37,19 @@ html, body {
   -moz-osx-font-smoothing: grayscale;
   -webkit-text-size-adjust: 100%;
 }
+html {
+  scroll-behavior: smooth;
+}
 body {
   min-height: 100vh;
   position: relative;
   overflow-x: hidden;
   padding: max(28px, env(safe-area-inset-top)) max(20px, env(safe-area-inset-right)) calc(60px + env(safe-area-inset-bottom)) max(20px, env(safe-area-inset-left));
+  animation: page-enter 0.28s ease both;
+}
+@keyframes page-enter {
+  from { opacity: 0; transform: translateY(8px); }
+  to { opacity: 1; transform: translateY(0); }
 }
 body::before {
   content: '';
@@ -810,6 +818,13 @@ body::after {
 
 /* ===== Component 4: section + To Do List ===== */
 .section { margin-top: 8px; }
+.section,
+.dash-overview,
+.today-command,
+.ticker-row,
+.day-ring-wrap {
+  scroll-margin-top: calc(74px + env(safe-area-inset-top));
+}
 .section-head {
   display: flex; align-items: center; justify-content: space-between; gap: 12px;
 }
@@ -998,6 +1013,8 @@ body::after {
   border-radius: 12px;
   transition: background 0.2s, opacity 0.3s;
   position: relative;
+  user-select: text;
+  -webkit-user-select: text;
 }
 .gm-row:hover { background: rgba(255,255,255,0.06); }
 .gm-row.gm-row-done {
@@ -1030,6 +1047,7 @@ body::after {
   opacity: 0;
   transition: opacity 0.2s;
   user-select: none;
+  -webkit-user-select: none;
 }
 .gm-row:hover .gm-handle { opacity: 1; }
 .gm-handle:active { cursor: grabbing; }
@@ -1074,6 +1092,9 @@ body::after {
   border-radius: 4px;
   padding: 2px 4px;
   margin: -2px -4px;
+  user-select: text;
+  -webkit-user-select: text;
+  -webkit-touch-callout: default;
 }
 .gm-text[contenteditable="true"] {
   outline: 1px solid rgba(255,255,255,0.18);
@@ -1301,6 +1322,10 @@ body::after {
   }
 }
 @media (prefers-reduced-motion: reduce) {
+  html { scroll-behavior: auto; }
+  body {
+    animation: none;
+  }
   body::before,
   .dash-chart-card::before,
   .goal-ticker::after,
@@ -1515,7 +1540,7 @@ body::after {
       <ul id="goalList" class="goal-list gm-list"></ul>
       <div id="emptyState" class="empty-state">No to-dos for today yet — add one below.</div>
       <div class="goal-input-wrap gm-input-wrap">
-        <input id="goalInput" class="gm-input" type="text" placeholder="Add a to-do for today..." autocomplete="off">
+        <input id="goalInput" class="gm-input" type="text" placeholder="todo for today" autocomplete="off">
         <div class="gm-term-select" id="goalTermSelect" aria-label="Goal term">
           <button type="button" class="gm-term-btn is-active" data-goal-term="short">Short</button>
           <button type="button" class="gm-term-btn" data-goal-term="long">Long</button>
@@ -2245,7 +2270,7 @@ body::after {
 
   // ---------- Row building ----------
   function makeInlineEdit(textEl, goals, idx, key, reload) {
-    textEl.addEventListener('click', () => {
+    function startEdit() {
       if (textEl.getAttribute('contenteditable') === 'true') return;
       const original = textEl.textContent;
       textEl.setAttribute('contenteditable', 'true');
@@ -2276,12 +2301,22 @@ body::after {
         if (e.key === 'Enter') { e.preventDefault(); textEl.removeEventListener('keydown', onKey); textEl.blur(); }
         else if (e.key === 'Escape') { e.preventDefault(); textEl.removeEventListener('keydown', onKey); cancel(); }
       });
+    }
+    textEl.title = 'Select to copy. Double-click to edit.';
+    textEl.addEventListener('dblclick', startEdit);
+    textEl.addEventListener('keydown', (e) => {
+      if (e.key === 'Enter') {
+        e.preventDefault();
+        startEdit();
+      }
     });
   }
 
   function wireDragReorder(row, listEl, key, reload) {
-    row.setAttribute('draggable', 'true');
-    row.addEventListener('dragstart', (e) => {
+    const handle = row.querySelector('.gm-handle');
+    if (!handle) return;
+    handle.setAttribute('draggable', 'true');
+    handle.addEventListener('dragstart', (e) => {
       e.dataTransfer.effectAllowed = 'move';
       e.dataTransfer.setData('text/plain', row.dataset.idx);
     });
@@ -2334,6 +2369,7 @@ body::after {
 
     const text = document.createElement('span');
     text.className = 'gm-text';
+    text.tabIndex = 0;
     text.textContent = goal.text;
     li.appendChild(text);
     makeInlineEdit(text, null, idx, key, reload);
