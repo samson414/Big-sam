@@ -17,7 +17,7 @@
 <script>
 const CONFIG = {
   appTitle: "Training Console",
-  routineVersion: "sam-ppl-2026-07",
+  routineVersion: "sam-ppl-2026-07-main-gym",
 
   // Weight unit shown everywhere. "kg" or "lb".
   units: "kg",
@@ -25,8 +25,7 @@ const CONFIG = {
   // Gyms you train at. Add as many as you want.
   // `id` must be a short unique slug (no spaces). `name` is what people see.
   gyms: [
-    { id: "main",  name: "Main Gym" },
-    { id: "alt",   name: "Alt Gym" }
+    { id: "main",  name: "Main Gym" }
   ],
 
   // Training split. Most people use Push/Pull/Legs but you can rename
@@ -1905,6 +1904,12 @@ img, video, canvas, svg { max-width: 100%; }
     s.days  = (Array.isArray(s.days)  && s.days.length)  ? s.days  : CONFIG.days.slice();
     s.exercises = Array.isArray(s.exercises) ? s.exercises : buildDefaultExercises();
     mergeRoutineSeed(s);
+    if (s.gyms.length === 1) {
+      const onlyGym = s.gyms[0].id;
+      s.exercises.forEach(ex => {
+        if (ex.gym === 'both' || !s.gyms.find(g => g.id === ex.gym)) ex.gym = onlyGym;
+      });
+    }
     s.logs = (s.logs && typeof s.logs === 'object') ? s.logs : {};
     s.filterGym = s.filterGym || s.gyms[0].id;
     s.filterDay = s.filterDay || s.days[0].id;
@@ -2491,9 +2496,12 @@ img, video, canvas, svg { max-width: 100%; }
   let editingExId = null;
   let modalGym = null, modalDay = null;
   function renderModalSegs() {
-    $('exGymSeg').innerHTML = state.gyms.map(g =>
+    const gymButtons = state.gyms.map(g =>
       '<button data-gym="' + g.id + '" class="' + (modalGym === g.id ? 'active' : '') + '">' + escape(g.name) + '</button>'
-    ).join('') + '<button data-gym="both" class="' + (modalGym === 'both' ? 'active' : '') + '">Both</button>';
+    ).join('');
+    $('exGymSeg').innerHTML = gymButtons + (state.gyms.length > 1
+      ? '<button data-gym="both" class="' + (modalGym === 'both' ? 'active' : '') + '">Both</button>'
+      : '');
     $('exDaySeg').innerHTML = state.days.map(d =>
       '<button data-day="' + d.id + '" class="' + (modalDay === d.id ? 'active' : '') + '">' + escape(d.name) + '</button>'
     ).join('');
@@ -2519,6 +2527,9 @@ img, video, canvas, svg { max-width: 100%; }
     if (mode === 'edit') {
       $('exName').value = ex.name;
       modalGym = ex.gym;
+      if (state.gyms.length === 1 && (modalGym === 'both' || !state.gyms.find(g => g.id === modalGym))) {
+        modalGym = state.gyms[0].id;
+      }
       modalDay = ex.day;
       $('exBw').checked = !!ex.bw;
       $('exStartWeight').value = ex.startWeight || 0;

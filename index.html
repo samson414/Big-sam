@@ -407,6 +407,7 @@ body::after {
   padding-right: 22px;
 }
 @keyframes goal-tape {
+  /* Keep the goals tape moving left-to-right. */
   from { transform: translateX(-50%); }
   to   { transform: translateX(0); }
 }
@@ -1389,6 +1390,11 @@ body::after {
         <div class="dash-chart-value" id="dashTodoChartValue">7 days</div>
       </div>
       <svg class="dash-chart" id="dashTodoChart" viewBox="0 0 320 150" role="img" aria-label="To-do completion chart"></svg>
+      <div class="dash-chart-head">
+        <div class="dash-chart-title">Training Load</div>
+        <div class="dash-chart-value" id="dashGymChartValue">7 days</div>
+      </div>
+      <svg class="dash-chart" id="dashGymChart" viewBox="0 0 320 150" role="img" aria-label="Gym training load chart"></svg>
     </div>
   </section>
 
@@ -1940,6 +1946,86 @@ body::after {
     const todayRow = rows[rows.length - 1] || { done: 0, total: 0 };
     if (label) label.textContent = todayRow.done + '/' + todayRow.total + ' today';
   }
+  function getGymState() {
+    try {
+      const raw = localStorage.getItem('po_coach_v1');
+      return raw ? JSON.parse(raw) : null;
+    } catch (e) {
+      return null;
+    }
+  }
+  function renderDashboardGymChart() {
+    const svg = document.getElementById('dashGymChart');
+    const label = document.getElementById('dashGymChartValue');
+    if (!svg) return;
+    const gym = getGymState();
+    const logsByExercise = gym && gym.logs && typeof gym.logs === 'object' ? gym.logs : {};
+    const unit = gym && gym.units ? gym.units : 'kg';
+    const today = new Date(getActiveDateString() + 'T12:00:00');
+    const rows = [];
+    for (let i = 6; i >= 0; i--) {
+      const d = new Date(today);
+      d.setDate(today.getDate() - i);
+      const key = dateToKey(d);
+      rows.push({ key, label: ['S','M','T','W','T','F','S'][d.getDay()], sets: 0, volume: 0 });
+    }
+    Object.keys(logsByExercise).forEach(exId => {
+      const logs = Array.isArray(logsByExercise[exId]) ? logsByExercise[exId] : [];
+      logs.forEach(log => {
+        const key = String(log.date || '').slice(0, 10);
+        const row = rows.find(r => r.key === key);
+        if (!row) return;
+        row.sets += 1;
+        row.volume += Math.max(0, Number(log.weight) || 0) * Math.max(0, Number(log.reps) || 0);
+      });
+    });
+    svg.innerHTML = '';
+    const ns = 'http://www.w3.org/2000/svg';
+    const base = 124;
+    const maxVolume = Math.max(1, ...rows.map(r => r.volume));
+    rows.forEach((row, idx) => {
+      const ratio = row.volume ? row.volume / maxVolume : 0;
+      const x = 24 + idx * 42;
+      const barH = Math.max(4, ratio * 82);
+      const rect = document.createElementNS(ns, 'rect');
+      rect.setAttribute('x', x);
+      rect.setAttribute('y', base - barH);
+      rect.setAttribute('width', 24);
+      rect.setAttribute('height', barH);
+      rect.setAttribute('rx', 6);
+      rect.setAttribute('fill', ratio >= 0.8 ? '#D5F8FF' : ratio > 0 ? 'rgba(155,219,255,0.74)' : 'rgba(155,219,255,0.10)');
+      svg.appendChild(rect);
+
+      const text = document.createElementNS(ns, 'text');
+      text.setAttribute('x', x + 12);
+      text.setAttribute('y', 142);
+      text.setAttribute('text-anchor', 'middle');
+      text.setAttribute('font-size', '9');
+      text.setAttribute('font-family', 'ui-monospace, SF Mono, Menlo, Consolas, monospace');
+      text.setAttribute('fill', 'rgba(250,250,250,0.42)');
+      text.textContent = row.label;
+      svg.appendChild(text);
+    });
+    const linePoints = rows.map((row, idx) => {
+      const ratio = row.volume ? row.volume / maxVolume : 0;
+      return (36 + idx * 42) + ',' + (base - Math.max(4, ratio * 82));
+    }).join(' ');
+    const poly = document.createElementNS(ns, 'polyline');
+    poly.setAttribute('points', linePoints);
+    poly.setAttribute('fill', 'none');
+    poly.setAttribute('stroke', '#9BDBFF');
+    poly.setAttribute('stroke-width', '2');
+    poly.setAttribute('stroke-linecap', 'round');
+    poly.setAttribute('stroke-linejoin', 'round');
+    svg.appendChild(poly);
+
+    const todayRow = rows[rows.length - 1] || { sets: 0, volume: 0 };
+    if (label) {
+      label.textContent = todayRow.sets
+        ? todayRow.sets + ' sets · ' + Math.round(todayRow.volume).toLocaleString() + unit
+        : 'No sets today';
+    }
+  }
   function dayProgress() {
     const now = new Date();
     const hours = now.getHours() + now.getMinutes() / 60 + now.getSeconds() / 3600;
@@ -1982,6 +2068,7 @@ body::after {
     document.getElementById('dashChartValue').textContent = habitDone + '/' + habitState.habits.length + ' today';
     renderDashboardChart(habitState);
     renderDashboardTodoChart();
+    renderDashboardGymChart();
     renderTodayCommand(goals, habitState);
   }
   function bindHabitAdd() {
